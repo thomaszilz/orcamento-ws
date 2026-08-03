@@ -113,6 +113,24 @@ input[type=number]{font-variant-numeric:tabular-nums}
 .calc{padding:9px 11px;border:1px dashed var(--linha);border-radius:8px;font-size:14px;
       background:#F6F1E9;color:var(--br);font-weight:600;font-variant-numeric:tabular-nums}
 .calc small{color:var(--fraco);font-weight:600;font-size:11px}
+/* margem por produto: nome | custo | margem | preço */
+.marg{display:grid;grid-template-columns:1fr 84px 88px 96px;gap:9px;align-items:center;
+      padding:7px 0;border-bottom:1px solid #F6F1E9}
+.marg.cab{border-bottom:1px solid var(--linha);padding-bottom:6px;
+      font-size:10px;color:var(--fraco);font-weight:700;text-transform:uppercase;letter-spacing:.6px}
+.marg .nm{font-size:13px;font-weight:500}
+.marg .nm small{display:block;color:var(--fraco);font-size:10.5px;font-weight:400;margin-top:1px;line-height:1.35}
+.marg .cu,.marg .pr,.marg .n{text-align:right;font-variant-numeric:tabular-nums;font-size:12.5px}
+.marg .cu{color:var(--fraco)}
+.marg .pr{font-weight:700;color:var(--br)}
+.marg.off{display:none}
+@media(max-width:640px){
+  .marg{grid-template-columns:1fr 92px;gap:6px 10px;
+        grid-template-areas:"nome nome" "custo margem" "preco preco"}
+  .marg .nm{grid-area:nome} .marg .cu{grid-area:custo;text-align:left}
+  .marg .ip{grid-area:margem} .marg .pr{grid-area:preco;text-align:left;font-size:14px}
+  .marg.cab{display:none}
+}
 /* equipe: uma linha por pessoa */
 .pessoa{display:grid;grid-template-columns:1fr 108px 104px 84px 30px;gap:9px;align-items:center;
       padding:7px 0;border-bottom:1px solid #F6F1E9}
@@ -330,7 +348,7 @@ body.imprimindo #proposta{display:block;box-shadow:0 10px 40px rgba(0,0,0,.5)}
     <label class="porta-lembrar"><input type="checkbox" id="lembrar" checked> Continuar conectado neste navegador</label>
     <button class="b1" type="submit" id="btn_entrar">Entrar</button>
     <div class="porta-erro" id="porta_erro"></div>
-    <div class="porta-versao">versão de 03/08/2026 às 16:38</div>
+    <div class="porta-versao">versão de 03/08/2026 às 17:00</div>
   </form>
 </div>
 
@@ -488,9 +506,29 @@ body.imprimindo #proposta{display:block;box-shadow:0 10px 40px rgba(0,0,0,.5)}
       <h2><span class="num">6</span>Precificação</h2>
       <div class="dica">A margem é sobre o preço de venda: <b>75% quer dizer que 75% do que o cliente paga sobra</b> depois do custo e do imposto. São duas porque no café vocês vendem o barista e a experiência; nos Bites, o produto — foi o que a proposta da Dafni Santos revelou.</div>
       <div class="grade">
-        <div><label>Margem do café</label><span class="ip" data-suf="%"><input id="margem_cafe_pct" type="number" min="0" max="95" step="1"></span></div>
-        <div><label>Margem dos Bites</label><span class="ip" data-suf="%"><input id="margem_bites_pct" type="number" min="0" max="95" step="1"></span></div>
         <div><label>Imposto</label><span class="ip" data-suf="%"><input id="imposto_pct" type="number" min="0" max="50" step="0.5"></span></div>
+      </div>
+
+      <div style="margin-top:16px">
+        <div class="dica" style="margin-bottom:10px">Cada produto tem a sua margem. Só aparecem os que estão no orçamento.</div>
+        <div class="marg cab"><span>Produto</span><span class="n">Custo</span><span class="n">Margem</span><span class="n">Preço</span></div>
+        <div class="marg" id="mg_coado"><span class="nm">Café coado</span><span class="cu">—</span>
+          <span class="ip" data-suf="%"><input id="margem_coado_pct" type="number" min="0" max="95" step="1"></span><span class="pr">—</span></div>
+        <div class="marg" id="mg_espresso"><span class="nm">Espresso</span><span class="cu">—</span>
+          <span class="ip" data-suf="%"><input id="margem_espresso_pct" type="number" min="0" max="95" step="1"></span><span class="pr">—</span></div>
+        <div class="marg" id="mg_esp_leite"><span class="nm">Espresso com leite</span><span class="cu">—</span>
+          <span class="ip" data-suf="%"><input id="margem_esp_leite_pct" type="number" min="0" max="95" step="1"></span><span class="pr">—</span></div>
+        <div class="marg" id="mg_gelada"><span class="nm">Bebida gelada</span><span class="cu">—</span>
+          <span class="ip" data-suf="%"><input id="margem_gelada_pct" type="number" min="0" max="95" step="1"></span><span class="pr">—</span></div>
+        <div class="marg" id="mg_xarope"><span class="nm">Xarope</span><span class="cu">—</span>
+          <span class="ip" data-suf="%"><input id="margem_xarope_pct" type="number" min="0" max="95" step="1"></span><span class="pr">—</span></div>
+        <div class="marg" id="mg_pao_queijo"><span class="nm">Pão de queijo</span><span class="cu">—</span>
+          <span class="ip" data-suf="%"><input id="margem_pao_queijo_pct" type="number" min="0" max="95" step="1"></span><span class="pr">—</span></div>
+        <div class="marg" id="mg_brownie"><span class="nm">Mini brownie</span><span class="cu">—</span>
+          <span class="ip" data-suf="%"><input id="margem_brownie_pct" type="number" min="0" max="95" step="1"></span><span class="pr">—</span></div>
+        <div class="marg" id="mg_equipe"><span class="nm">Equipe e deslocamento<small>Barista, carro e bancada — não é produto, mas carrega margem</small></span><span class="cu">—</span>
+          <span class="ip" data-suf="%"><input id="margem_equipe_pct" type="number" min="0" max="95" step="1"></span><span class="pr">—</span></div>
+        <div class="rodape-sec" id="calc_margens">—</div>
       </div>
 
       <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--linha)">
@@ -598,7 +636,7 @@ body.imprimindo #proposta{display:block;box-shadow:0 10px 40px rgba(0,0,0,.5)}
 // Custos, margens e histórico chegam cifrados com AES-256-GCM. A senha vira
 // chave via PBKDF2 (mesmos parâmetros do lado Python). Abrir o código-fonte
 // mostra só bytes aleatórios — não há o que espiar.
-const COFRE = {"sal": "SX5hfVEUwHHgbhmC8YU/+g==", "iv": "KbIWtypVQKVB+vg6", "dados": "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", "iteracoes": 310000};
+const COFRE = {"sal": "p7kq2nVbPlh/PN0nfQWIBA==", "iv": "K9URd5e/rYZZ/37L", "dados": "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", "iteracoes": 310000};
 const FORM_HISTORICO = "historico-orcamentos";
 let HISTORICO, ANP, CUSTOS, RECEITA, PADRAO, TEXTOS, EQUIPE_PADRAO, __ESCOPO;
 
@@ -702,11 +740,31 @@ function calcular(){
   const custo = insumos + indiretos;
 
   const i = num('imposto_pct')/100;
-  // preço = custo / (1 - margem - imposto) -> chega exatamente na margem alvo.
-  // Cada bloco tem a sua: o café vende barista e experiência, os Bites vendem comida.
+  // preço = custo / (1 - margem - imposto) -> chega exatamente na margem alvo
   const sugerir = (cu, m) => { const div = 1 - m/100 - i; return div > 0.02 ? cu/div : cu * 3; };
-  const sug_cafe  = sugerir(custo_cafe,  num('margem_cafe_pct'));
-  const sug_bites = sugerir(custo_bites, num('margem_bites_pct'));
+
+  // UMA MARGEM POR PRODUTO. Somar o preço de cada um dá exatamente o mesmo que
+  // aplicar uma margem única ao bloco enquanto todas forem iguais — a conta é
+  // linear. Ou seja: isto não mexe em nada até você mudar alguma margem.
+  const PROD = [
+    {k:'coado',      nome:'Café coado',           custo:custo_coado,      bloco:'cafe'},
+    {k:'espresso',   nome:'Espresso',             custo:custo_espresso,   bloco:'cafe'},
+    {k:'esp_leite',  nome:'Espresso com leite',   custo:custo_esp_leite,  bloco:'cafe'},
+    {k:'gelada',     nome:'Bebida gelada',        custo:custo_gelada,     bloco:'cafe'},
+    {k:'xarope',     nome:'Xarope',               custo:custo_xarope,     bloco:'cafe'},
+    {k:'pao_queijo', nome:'Pão de queijo',        custo:custo_pao_queijo, bloco:'bites'},
+    {k:'brownie',    nome:'Mini brownie',         custo:custo_brownie,    bloco:'bites'},
+    // equipe/carro/bancada vão para o bloco do café — é dele que são; sem
+    // café no orçamento, caem nos Bites (senão o custo ficaria órfão)
+    {k:'equipe',     nome:'Equipe e deslocamento', custo:indiretos,       bloco: dir_cafe > 0 ? 'cafe' : 'bites'},
+  ];
+  PROD.forEach(p => {
+    p.margem = num('margem_' + p.k + '_pct');
+    p.preco  = sugerir(p.custo, p.margem);
+  });
+  const somaBloco = b => PROD.filter(p => p.bloco === b).reduce((s,p) => s + p.preco, 0);
+  const sug_cafe  = somaBloco('cafe');
+  const sug_bites = somaBloco('bites');
   // 0 = aceita a sugestão; qualquer valor = você mandou no preço
   const manual_cafe  = num('preco_cafe')  > 0;
   const manual_bites = num('preco_bites') > 0;
@@ -727,7 +785,7 @@ function calcular(){
           margem_real: preco>0 ? lucro/preco : 0,
           custo_coado,custo_espresso,custo_esp_leite,custo_gelada,custo_xarope,
           custo_pao_queijo,custo_brownie,
-          dir_cafe,dir_bites,custo_cafe,custo_bites,sug_cafe,sug_bites,
+          dir_cafe,dir_bites,custo_cafe,custo_bites,sug_cafe,sug_bites,PROD,indiretos,
           preco_cafe,preco_bites,manual_cafe,manual_bites,
           margem_cafe: mg(preco_cafe, custo_cafe), margem_bites: mg(preco_bites, custo_bites),
           // parcelas sempre inteiras: o texto da proposta arredonda, e se o
@@ -833,8 +891,26 @@ function render(){
     bloco('Coffee Bites', r.custo_bites, r.preco_bites, r.margem_bites, r.manual_bites) +
     (r.desconto > 0 ? l('Desconto no fechamento', -r.desconto) : '');
 
-  $('sug_cafe').textContent  = r.dir_cafe  > 0 ? 'Sugestão a ' + hnum(num('margem_cafe_pct'))  + '%: ' + brl(r.sug_cafe)  : 'Sem bebidas no orçamento';
-  $('sug_bites').textContent = r.dir_bites > 0 ? 'Sugestão a ' + hnum(num('margem_bites_pct')) + '%: ' + brl(r.sug_bites) : 'Sem Bites no orçamento';
+  // uma linha por produto: custo, margem editável e preço que ela gera
+  r.PROD.forEach(p => {
+    const linha = $('mg_' + p.k);
+    if (!linha) return;
+    linha.classList.toggle('off', p.custo <= 0);   // só o que está no orçamento
+    linha.querySelector('.cu').textContent = brl(p.custo);
+    linha.querySelector('.pr').textContent = brl(p.preco);
+  });
+  const usados = r.PROD.filter(p => p.custo > 0);
+  const margens = [...new Set(usados.map(p => p.margem))];
+  $('calc_margens').innerHTML = !usados.length ? 'Nada no orçamento ainda.'
+    : (margens.length === 1
+        ? 'Todos a <b style="color:var(--br)">' + hnum(margens[0]) + '%</b> · soma: <b style="color:var(--br)">' + brl(r.sug_cafe + r.sug_bites) + '</b>'
+        : 'Margens de <b style="color:var(--br)">' + hnum(Math.min(...margens)) + '%</b> a <b style="color:var(--br)">' +
+          hnum(Math.max(...margens)) + '%</b> · soma: <b style="color:var(--br)">' + brl(r.sug_cafe + r.sug_bites) + '</b>');
+
+  const rot = b => { const m = [...new Set(r.PROD.filter(p=>p.custo>0 && p.bloco===b).map(p=>p.margem))];
+                     return m.length === 1 ? hnum(m[0]) + '%' : hnum(Math.min(...m)) + '–' + hnum(Math.max(...m)) + '%'; };
+  $('sug_cafe').textContent  = r.dir_cafe  > 0 ? 'Sugestão a ' + rot('cafe')  + ': ' + brl(r.sug_cafe)  : 'Sem bebidas no orçamento';
+  $('sug_bites').textContent = r.dir_bites > 0 ? 'Sugestão a ' + rot('bites') + ': ' + brl(r.sug_bites) : 'Sem Bites no orçamento';
   $('calc_soma').innerHTML = r.desconto > 0
     ? 'Soma dos blocos ' + brl(r.soma) + ' − desconto ' + brl(r.desconto) + ' = <b style="color:var(--br)">' + brl(r.preco) + '</b>'
     : 'Soma dos blocos: <b style="color:var(--br)">' + brl(r.preco) + '</b>';
@@ -849,7 +925,7 @@ function render(){
   $('fim_detalhe').textContent = detalhe;
 
   let av = [];
-  const maiorM = Math.max(num('margem_cafe_pct'), num('margem_bites_pct'));
+  const maiorM = Math.max(...r.PROD.filter(p => p.custo > 0).map(p => p.margem), 0);
   if (maiorM + num('imposto_pct') >= 98) av.push('Margem + imposto passam de 100% — não existe preço que feche essa conta. O valor ao lado é só um provisório até você ajustar.');
   // sem preço não existe margem: mostrar "0%" seria um número tranquilizador
   // que não quer dizer nada
@@ -860,7 +936,7 @@ function render(){
             (r.desconto > 0 ? ' — o desconto no fechamento come margem' : '') + '.');
   }
   if (r.margem_real < 0) av.push('<b>Este evento dá prejuízo.</b>');
-  else if (r.preco > 0 && r.margem_real < 0.35) av.push('Margem bem abaixo do que vocês praticam (75% café / 65% Bites). Foi de propósito?');
+  else if (r.preco > 0 && r.margem_real < 0.35) av.push('Margem bem abaixo do que vocês praticam (cerca de 75% no café e 65% nos Bites). Foi de propósito?');
   const nb = EQUIPE.length;
   if (r.bebidas > 0 && nb === 0) av.push('Nenhuma pessoa na equipe.');
   // equipe sem valor = margem falsa, e é o erro mais caro que dá pra cometer aqui
