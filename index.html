@@ -196,6 +196,18 @@ button.grande{font-size:14px;padding:13px 28px}
 .linha-item:last-of-type{border-bottom:0}
 .linha-item .nm{font-size:13.5px;font-weight:500}
 .linha-item .nm small{display:block;color:var(--fraco);font-size:11px;font-weight:400;margin-top:1px}
+/* como o bloco e vendido: a vontade (a quantidade e estimativa nossa) ou
+   limitado (a quantidade e promessa e vai na proposta) */
+select.modo{margin-top:5px;padding:5px 7px;border:1px solid var(--linha);border-radius:7px;
+      font-size:11.5px;font-family:var(--sans);color:var(--am);background:#FDFBF8;
+      font-weight:600;cursor:pointer;max-width:100%}
+select.modo:focus{outline:0;border-color:var(--gd);box-shadow:0 0 0 3px rgba(232,160,42,.15)}
+.linha-item .nm small.segue{color:#c9bcae;font-style:italic}
+.modo-bloco{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:12px;
+      padding-bottom:12px;border-bottom:1px solid #F6F1E9}
+.modo-bloco label{margin:0}
+.modo-bloco select.modo{margin-top:0}
+@media(max-width:640px){ select.modo{width:100%;min-height:44px;font-size:16px} }
 .linha-item label{margin-bottom:3px}
 .qtd{text-align:right;font-size:15px;font-weight:700;color:var(--br);font-variant-numeric:tabular-nums;line-height:1.25}
 .qtd small{display:block;font-size:9.5px;color:var(--fraco);font-weight:700;text-transform:uppercase;letter-spacing:.4px}
@@ -348,7 +360,7 @@ body.imprimindo #proposta{display:block;box-shadow:0 10px 40px rgba(0,0,0,.5)}
     <label class="porta-lembrar"><input type="checkbox" id="lembrar" checked> Continuar conectado neste navegador</label>
     <button class="b1" type="submit" id="btn_entrar">Entrar</button>
     <div class="porta-erro" id="porta_erro"></div>
-    <div class="porta-versao">versão de 18/08/2026 às 15:04</div>
+    <div class="porta-versao">versão de 18/08/2026 às 15:17</div>
   </form>
 </div>
 
@@ -425,19 +437,19 @@ body.imprimindo #proposta{display:block;box-shadow:0 10px 40px rgba(0,0,0,.5)}
       <h2><span class="num">2</span>Bebidas</h2>
       <div class="dica">Você preenche <b>quanto cada convidado bebe</b>; a coluna da direita mostra o total que isso dá.</div>
       <div class="linha-item">
-        <div class="nm">Café coado<small>Máquina Bunn · copo kraft 200ml</small></div>
+        <div class="nm">Café coado<small id="nm_coado">Máquina Bunn · copo kraft 200ml</small><select class="modo" id="modo_coado"><option value="vontade">servido à vontade</option><option value="limitado">quantidade limitada</option></select></div>
         <div><label>quantidade</label><span class="ip" data-suf="por convidado"><input id="bpc_coado" type="number" min="0" step="0.1"></span></div>
         <div class="qtd" id="q_coado">—</div></div>
       <div class="linha-item">
-        <div class="nm">Espresso puro<small id="nm_espresso">—</small></div>
+        <div class="nm">Espresso puro<small id="nm_espresso">—</small><select class="modo" id="modo_espresso"><option value="vontade">servido à vontade</option><option value="limitado">quantidade limitada</option></select></div>
         <div><label>quantidade</label><span class="ip" data-suf="por convidado"><input id="bpc_espresso" type="number" min="0" step="0.1"></span></div>
         <div class="qtd" id="q_espresso">—</div></div>
       <div class="linha-item">
-        <div class="nm">Espresso com leite<small id="nm_esp_leite">—</small></div>
+        <div class="nm">Espresso com leite<small id="nm_esp_leite">—</small><small class="segue">segue o modo do espresso</small></div>
         <div><label>quantidade</label><span class="ip" data-suf="por convidado"><input id="bpc_espresso_leite" type="number" min="0" step="0.1"></span></div>
         <div class="qtd" id="q_espresso_leite">—</div></div>
       <div class="linha-item">
-        <div class="nm">Bebida gelada<small id="nm_gelada">—</small></div>
+        <div class="nm">Bebida gelada<small id="nm_gelada">—</small><select class="modo" id="modo_gelada"><option value="vontade">servido à vontade</option><option value="limitado">quantidade limitada</option></select></div>
         <div><label>quantidade</label><span class="ip" data-suf="por convidado"><input id="bpc_gelada" type="number" min="0" step="0.1"></span></div>
         <div class="qtd" id="q_gelada">—</div></div>
       <div class="linha-item">
@@ -450,6 +462,7 @@ body.imprimindo #proposta{display:block;box-shadow:0 10px 40px rgba(0,0,0,.5)}
     <div class="card" style="--ac:#A0522D">
       <h2><span class="num">3</span>Coffee Bites</h2>
       <div class="dica">Vem do Pão da Vida, pelo preço de transferência entre as empresas.</div>
+      <div class="modo-bloco"><label for="modo_bites">Como são vendidos</label><select class="modo" id="modo_bites"><option value="vontade">servido à vontade</option><option value="limitado">quantidade limitada</option></select></div>
       <div class="linha-item">
         <div class="nm">Pão de queijo<small>90 gramas cada</small></div>
         <div><label>por convidado</label><span class="ip" data-suf="por convidado"><input id="cpc_pao_queijo" type="number" min="0" step="0.25"></span></div>
@@ -636,7 +649,7 @@ body.imprimindo #proposta{display:block;box-shadow:0 10px 40px rgba(0,0,0,.5)}
 // Custos, margens e histórico chegam cifrados com AES-256-GCM. A senha vira
 // chave via PBKDF2 (mesmos parâmetros do lado Python). Abrir o código-fonte
 // mostra só bytes aleatórios — não há o que espiar.
-const COFRE = {"sal": "VhmJse39H1A2ZlN8PvsRlA==", "iv": "XazXJOpwMEDE70dp", "dados": "5L5SM0sXZtyK1Wv+Rw59C8673m0NiOwKnRTqh0TvHz4PhV9XmtKSSiRyKaE9OOwbDgSwNtY3GMgzOwXLZ2OAJUkeNaDbY1ScR7x402KrKE7VBJGnEGGgtgHtapfPgjZaAp3IMhxWqgB1VPwTcarOWNpLo9ptOEstWJtrXaq8aKt7lQTl/XhKleFIwpTS9HpO1CXCHgFzGrWXZMz8LZP5OO8paSOB+6KhAmKJuTgUpDFgFRojGUngXNCAXSyKu3kEE3Nm72gj67K9pE41Hg+NLncBe91mt1M2CXmJg12jFT7/13WXyFxZFtPuIHWyW73bu7Ruo1d3oU0m/gc8fuvr89294nvpnEcsIntYiBkfHqD8ygsHOoHa3b6W/xmQvOvhpTZVdzKv2egjAGywl96HS1CxctJuzFJ9DrWeDrknngxHZmgxL3nqAUlg/prcnIFhWo7Ony9wntPz7g82MXKI8qObxnzdngwVHGhXbRx/TbIDR+LPbEwPwBxJrrp51yCg63Y4JYAWCCowEV8qxLCYh+fANizBvPL7ckAHTBFjdg5oSSX17i9SV3ke4CLTn9q/W7/BtE+YlV07Ks2NNEZuOMbOWicAg2chsbV42BKVCPl5R5ecV3U/B77z8zJBfhovSm+aT2WlQf4PAVWm9lJLuvMBfb6/ZNxZyTqwfeQn3JMF9zolz2aPfKpId1lQF1/Iiwsy42rilTvpzqvcYcwrIWfMFdvgeKmv/y8b3xH60bBsaEnM9KY1dfoPOdoBlE+pFSlXu98t+gH2jeAsIJEjiFBfrWWFisSeZG5XEPJc5/YVFzqkpVsXuZugaYcXgk6FgChHdIVaI3vA8MyCzVKgDOVt2eza7tvx669ZUanw4R+hWvudBqmz6vV9TAxGbbtY9Lweebzh8ne2aFrDtmkWvCfomJraVfs+4/ET+qJXZB8cz4lAlRJI6FJOXoJTdoAtIm1enYA7GMvU1wBQuyr1j6XBGrmBWS3cQvsW8334MhqHzP0FMmchHEbBx0xHoTm+hh6nE+bwGA8X7DxaWRORXSHkQn0dFuiBIZ+Qyg7TbmpyiLXMthDvT5nT2RhrfV34k8odEpaHLA+wIdEJd9RHtQRZJ8uFyqfGd24CTYjNF1OvXKa+yZNINNBxO0/cgSex7GYmaH0JbEHdqSu3CsrdSaJ7yZxyy1NfPnHvVE8cqpfbrFMymGEuXUH4yk13wDy1HBZn1N9hfCBlf3MDAwTQdzlVjGl5XsnGS+22FpF5WZMjao+4kkGEVnxX2Q6NVfZO3YaD6E7gLmg0TxcPjEKI6ScDywSH6t7D4QEYPUJnZ7JknPodoeeAGcP+wX5kC8sTKNpFbmXNR038lKDJEOI35ibNWDCnDmdNok129YJA1+rfGspmbFu/bbopzQstFSVzG2lFLfnTZF2SFYaOV2lA9jv01m+okpKjxBBNI+XM2UUJioP8FcOh45GP+yX9YegmWRdjFPrCuzTJRQ/btyMgaaTgNr6VrLHRcYL/Xp+PDNfoilATnYMS/SXLhgy26kzZv1F6k7tqVDnD1/k5kmJBdZWYq4b0hpLWXI/Jc0VyjaHYYJbjSNkrw7Ictgih6MBxNWaprJT6Uh574geOO6hQfAzJVz75ODIV1RdN0LaTW4nAGFnj802+80MCU3THi206sopAfeR1MEVmPIZaFe1+mYBb46EzbpqGZDZ7lJvbaFK2tuUamvY/Nva5GlBa2kFSMKuGX7sqw4iaPIk7w2H5cftCmR8ly3RZHo7pXLAT19Cw89FUQ6fzYGyZIkwnV/sDrLFg4BpnJgcADkWcQX6gcORqry5nzZ+vcZ5UsfBM7nW8nzMhSp0JzUdvNU5Y+34ONtGNfkW1Pe67ArJi89PvdMEUQja7shNJJJTEeXPqCAwSda1dpM4BdP/M5++jIve9FMQRRbJepo9cmPaQtZ+9vU0ERTGcM6NwcRwUUK3JpTT0O0KvubxrAJurMpggMqzhu9DzWO1iz2ClrZe53qI0bly/6rvcYeNSMfD8FkRpVguSvGCvM4H3BxGz0X8WeCy00vVT0+DOV59LaSNFFRixikAOTlDfuL3MIH9YBRJzFc6QJK/jzlutbvO0vacp/1X5PL21V5N3Epr1gI7WI4VY0CtbspCfDLKouIijPxea5rydzq/XNqzkMX9xJVuLxyjELbcUL6/yFPxYvkwlYbmtsz91jEU7uq0Oo2h8YyEpLPhNMSU6UIv/u7ckzIdKrWY9iCljYHBHwP4NNSpOMMaHIDNsL5cCH/rRnm1FRG2jS9wz92NgevZ2JmdHreIk6nQWMK7zNh38YgC7dMABmzg1F2XkfdSC9tKAwgrfYmyf0uCCvwVcvLNKMX7bg2Qtpya+WTyH/a7WP135AOonTD7gMuvOu8chWiICc8vvFn3+RGTmPAqSxJJfqVsRfs3xjFvHXx3cYWTCqwPgN2aLEt/8HlhUjtSmXRHlcX1JReKu6WL04IM1SysqDdpJ1Nd4RXwEpWVdoQXOtgRTJzhjgH0oKWXQFA6+SlEwHJVtvd0SGZ6UWxLoADIvgyOBO3pR7oXGEMvlDJ3CpCUermD7hEGgZN8GWrKC7cce8eJZMM/uaLofo7uie5H+TgCLP99tbxNpvdtlGloYUNuejTCubjxHdctT2076K6TOsPcCEgP9RX+EB/D3/1RDEBBGWi8dPrpt7bGQIOSuH3+tkkKhL7blOj/VG5JvisIcQGDgp8hyGSnTz+FLzh5NjvZCGbMTSw9Q8JFhntZ9uNC52g5ZIQcK6pOxjY1eCRhmgNEhGJ66mQFBP00mZahhvm+ih7AJuqBDnA0IOps3rOyx0Vh6MWTx0RmXMEj/ShwzLU25eUHmvCKUDyF60YatfP3guqY5PGkYouRYRXi+X2pWbZ3MXxe8vn+qQA9HaCLXdM5JF1mbPYkQwBuZD8zgJLiJpBBmT/n6mC5rqncVfdI638tqtjJy0E+DRAET/yMWIg/vVQlgd1rDFFyjt9nm28G9sN4C3m0i8g8NxMl4xfURHpRNJgG7WyCpTkb2uF3FhL+0gIWCPitI/c7I7lxS+k+GwNMIkSqohq9a0noe+nTxXnbrj1V8LhPbgEOzcAfASWBVFaPbYGLdXGlwsRLZYc+usNP24PV2Na8oMMNAngc55hz0tVzl3YGlePtmBXpuHrBJcNrGlzPV03LDq+Q3GkgwhzrKSopjtxZAutVAp0BJdgV0lcDJJwlh4dUg6TPCJzBdF/HRQqhyG4RHa/HZI5Xu46BBHnZOGO9ccy3pfwMUig8codjjV1afxKZcAwdh1W3+vvooMYF9w+g0SzabdszwnIh7GmosqrzBk2pwMxJk/6x+nVhfxr6IhQDYXPe6bwyTE04n67daJR+UE5qhQOpr9lzpc9aArnq3XKA8bRucLRWEtv3tOuL2MKRSmSvNkpVwqfNdh96FlxBUbpIaMMaRLDuJS3l5K2dj3A10PnD6fTl08Sm5dnw4TBn/w8r8i+9kQuRAO+4FIznplA93RVhXF3cb0kjz/cCWfDJOrIN0EQObPiYnbL/e2YIC2JGly5Tl1VCJif3h2dvzvBMdEi+dIg/s7hiF78NiiQf73o5hjc/0b4Ieo3fEZ2Vi0/fXOlvc+COpLC5ZPy8oyksSGAaT9ZI5sO5nW9kSKWqydu3A61YxDLijv1FrpF3T1laJLQ20w9xaSDdLLId2L/C1kzQUUbQQWnVa/ohLG58ulmf3QgFM1276kRswPsieJk5iIjiYdUaHc0PDJbPmEjb8Iv9LtYcI0mC+P8sAtueDFCbpPq3NuCzGUMqSyQqJ0kBo7e7Pmr5BMkF8QJbfUTsHsUdnAgx2vX7vmXgzNu5N6xUv6jPwPR+B1LGxLqfA+zBDHYdZX5yeqzP5NQ/JohXZ8Ir6ifrko3UcPKAiYriMhHWg3xDW/iYBgdMmouofpvJTTlPuPQCyNHNG0/LswQQy8kqbIgNnPn7nPDcEYwXbCQhzJ56hmv3OMX+mEHaVfwaXDRXcObIK9N67zyZGJgx1KemjwXa3GtQuuSbCLuz5jikWcmTF3QsXPUkxs6rsQGBkNGarETi/ckfPpTCNpbCWc0Vlt8CTX16Ke7vaw8OK9CgqnrU3BspKTO1hB6ImuL1aM40khfKbGHThlj3n3wLtYIb3gEqw/YbxDKIz9IxhHA2suUcN/mjIn3JTXDbmczC8sOP17H/7vZJitCdSLg4b5XMIyZv7b+q6jwpVzaJZ7IDmJWBgtEzdepGWYKwDTohqbbChEBy5dQlliODD9WeHOMbu5DsnLLG3rAXBtNbH8ysF/3UZo/M6laMp55NzD9ZYBlmGflVZCVSRwATnS/p8INomiGXfEvUznSjpXO+ligUviSuNTREJkhx+husJw0kJLdQRNNqrBxJZP/Y6skdQ9XvFgY7xGJ4/jFPuAInqOgKQFaufv8Of4X2LAkfkI8ALJcSSs3qgfLpd3eJqfrdwaANu+SPT6kl1uuju3FFZwSg=", "iteracoes": 310000};
+const COFRE = {"sal": "6uPL2W1W/krCCkXW892IGg==", "iv": "MRbOZcEmQctFEjE3", "dados": "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", "iteracoes": 310000};
 const FORM_HISTORICO = "historico-orcamentos";
 let HISTORICO, ANP, CUSTOS, RECEITA, PADRAO, TEXTOS, EQUIPE_PADRAO, __ESCOPO;
 
@@ -815,11 +828,19 @@ function render(){
   // Foi assim que a gelada passou meses parecendo não ter café: a conta
   // incluía a dose, mas o rótulo dizia só "copo PET + tampa + canudo".
   const dose_g = RECEITA.espresso_g, leite_ml = RECEITA.leite_ml;
-  $('nm_espresso').textContent = 'Máquina profissional · ' + hnum(dose_g) + ' gramas de café';
+  // A quantidade digitada quer dizer coisas diferentes em cada modo, e isso
+  // precisa ficar claro na tela: no "a vontade" ela e estimativa nossa para
+  // custear; no "limitado" ela e a promessa que vai escrita na proposta.
+  const modo = k => ($('modo_'+k) || {value:'vontade'}).value;
+  const sufixoModo = k => modo(k)==='vontade'
+      ? ' · a quantidade é sua estimativa de consumo'
+      : ' · a quantidade vai escrita na proposta';
+  $('nm_coado').textContent = 'Máquina Bunn · copo kraft 200ml' + sufixoModo('coado');
+  $('nm_espresso').textContent = 'Máquina profissional · ' + hnum(dose_g) + ' gramas de café' + sufixoModo('espresso');
   $('nm_esp_leite').textContent = 'Cappuccino, latte · ' + hnum(dose_g) + ' gramas de café + ' +
       hnum(leite_ml) + ' ml de leite';
   $('nm_gelada').textContent = hnum(dose_g) + ' gramas de café + ' + hnum(leite_ml) +
-      ' ml de leite · copo PET + tampa + canudo';
+      ' ml de leite · copo PET + tampa + canudo' + sufixoModo('gelada');
   $('calc_brownie').innerHTML = r.q.brownie > 0
     ? r.q.brownie + ' minis = <b style="color:var(--br)">' + r.brownies_inteiros + ' brownies inteiros</b> cortados' +
       (r.brownies_inteiros * r.pedacos > r.q.brownie
@@ -1062,10 +1083,28 @@ function gerarPDF(){
   // ele aparece no último item de bebida, e não repetido em cada um.
   const it = [];
   if (r.dir_cafe > 0){
+    // Cada bloco tem um modo: "a vontade" nao cita quantidade (o risco de
+    // consumo e nosso), "limitado" escreve o numero como promessa ao cliente.
+    const md = k => ($('modo_'+k) || {value:'vontade'}).value;
     const bebidas = [];
-    if (r.q.coado) bebidas.push('<b>Fornecimento de café passado:</b> Café do produtor Adauto Guimarães (Notas de Chocolate, nozes, leve acidez) servido <b>à vontade</b> para o público. Feito na torre de passar café e servido com nossos copos duplos descartáveis podendo ser personalizados com o logo do evento.');
-    if (r.q.espresso || r.q.espresso_leite) bebidas.push('<b>Espresso e bebidas com leite:</b> extraídos na hora em máquina profissional por nossos baristas — espresso, cappuccino, latte e afins.');
-    if (r.q.gelada) bebidas.push('<b>Bebidas geladas:</b> preparadas com espresso e leite, servidas em copo com tampa e canudo.');
+    if (r.q.coado) bebidas.push('<b>Fornecimento de café passado:</b> Café do produtor Adauto Guimarães (Notas de Chocolate, nozes, leve acidez) ' +
+      (md('coado')==='vontade'
+        ? 'servido <b>à vontade</b> para o público.'
+        : 'servido em <b>' + r.q.coado + ' copos</b> de ' + hnum(RECEITA.copo_ml) + ' ml.') +
+      ' Feito na torre de passar café e servido com nossos copos duplos descartáveis podendo ser personalizados com o logo do evento.');
+    if (r.q.espresso || r.q.espresso_leite){
+      const quais = [];
+      if (r.q.espresso) quais.push(r.q.espresso + ' espressos');
+      if (r.q.espresso_leite) quais.push(r.q.espresso_leite + ' bebidas com leite');
+      bebidas.push('<b>Espresso e bebidas com leite:</b> ' +
+        (md('espresso')==='vontade'
+          ? 'extraídos na hora em máquina profissional por nossos baristas — espresso, cappuccino, latte e afins, <b>à vontade</b> para o público.'
+          : '<b>' + listaPt(quais) + '</b>, extraídos na hora em máquina profissional por nossos baristas.'));
+    }
+    if (r.q.gelada) bebidas.push('<b>Bebidas geladas:</b> ' +
+      (md('gelada')==='vontade'
+        ? 'preparadas com espresso e leite, servidas em copo com tampa e canudo, <b>à vontade</b> para o público.'
+        : '<b>' + r.q.gelada + ' unidades</b>, preparadas com espresso e leite, servidas em copo com tampa e canudo.'));
     // O xarope vale para TODAS as bebidas de espresso e para as geladas do
     // orçamento — não só para uma delas. Antes ele era grudado num único item,
     // e com espresso E gelada juntos a proposta prometia xarope só nas geladas,
@@ -1080,10 +1119,15 @@ function gerarPDF(){
     it.push(...bebidas);
   }
   if (r.dir_bites > 0){
+    const limitado = (($('modo_bites') || {value:'limitado'}).value) === 'limitado';
     const b = [];
-    if (r.q.pao_queijo) b.push(r.q.pao_queijo + ' unidades dos clássicos <b>pães de queijo*</b> da William &amp; Sons de 90g');
-    if (r.q.brownie) b.push(r.q.brownie + ' mini brownies de aproximadamente ' + hnum(gramasMini(r.pedacos)) + 'g');
-    it.push('<b>Coffee Bites:</b> ' + b.join(' e ') + '. - <b>Investimento: ' + brl(r.preco_bites) + '</b>');
+    if (r.q.pao_queijo) b.push((limitado ? '<b>' + r.q.pao_queijo + ' unidades</b> dos' : 'os') +
+        ' clássicos <b>pães de queijo*</b> da William &amp; Sons de 90g');
+    if (r.q.brownie) b.push((limitado ? '<b>' + r.q.brownie + '</b> ' : '') +
+        'mini brownies de aproximadamente ' + hnum(gramasMini(r.pedacos)) + 'g');
+    it.push('<b>Coffee Bites:</b> ' + listaPt(b) +
+        (limitado ? '.' : ', <b>liberados à vontade</b> para o público.') +
+        ' - <b>Investimento: ' + brl(r.preco_bites) + '</b>');
   }
   $('p_itens').innerHTML = it.map(x => '<li>' + x + '</li>').join('');
   $('p_nota').style.display = r.q.pao_queijo > 0 ? '' : 'none';
@@ -1333,6 +1377,8 @@ function iniciar(){
     problemas.map(k => CUSTOS[k].nome + ' — ' + CUSTOS[k].alerta + ' (usando ' + brl(CUSTOS[k].valor) + ')').join('<br>') + '</div>';
 
   document.querySelectorAll('.wrap input').forEach(el => el.addEventListener('input', render));
+  // os seletores de modo mudam o texto da proposta e o rotulo da quantidade
+  document.querySelectorAll('select.modo').forEach(el => el.addEventListener('change', render));
   pintarHistorico();
   render();
 }
