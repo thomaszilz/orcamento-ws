@@ -348,7 +348,7 @@ body.imprimindo #proposta{display:block;box-shadow:0 10px 40px rgba(0,0,0,.5)}
     <label class="porta-lembrar"><input type="checkbox" id="lembrar" checked> Continuar conectado neste navegador</label>
     <button class="b1" type="submit" id="btn_entrar">Entrar</button>
     <div class="porta-erro" id="porta_erro"></div>
-    <div class="porta-versao">versão de 18/08/2026 às 14:43</div>
+    <div class="porta-versao">versão de 18/08/2026 às 15:04</div>
   </form>
 </div>
 
@@ -441,8 +441,8 @@ body.imprimindo #proposta{display:block;box-shadow:0 10px 40px rgba(0,0,0,.5)}
         <div><label>quantidade</label><span class="ip" data-suf="por convidado"><input id="bpc_gelada" type="number" min="0" step="0.1"></span></div>
         <div class="qtd" id="q_gelada">—</div></div>
       <div class="linha-item">
-        <div class="nm">Com xarope<small>Só em espresso, espresso com leite e geladas — não entra no coado</small></div>
-        <div><label>delas</label><span class="ip" data-suf="%"><input id="perc_xarope" type="number" min="0" max="100" step="5"></span></div>
+        <div class="nm">Com xarope<small>Só nas bebidas geladas</small></div>
+        <div><label>das geladas</label><span class="ip" data-suf="%"><input id="perc_xarope" type="number" min="0" max="100" step="5"></span></div>
         <div class="qtd" id="q_xarope">—</div></div>
       <div class="rodape-sec">Total de <b id="q_total" style="color:var(--br);font-size:14px">—</b> bebidas · <span id="q_por_hora">—</span></div>
     </div>
@@ -636,7 +636,7 @@ body.imprimindo #proposta{display:block;box-shadow:0 10px 40px rgba(0,0,0,.5)}
 // Custos, margens e histórico chegam cifrados com AES-256-GCM. A senha vira
 // chave via PBKDF2 (mesmos parâmetros do lado Python). Abrir o código-fonte
 // mostra só bytes aleatórios — não há o que espiar.
-const COFRE = {"sal": "x17aTWujFNz2s64FsMj+kw==", "iv": "DKs0BqytIuk8DgsN", "dados": "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", "iteracoes": 310000};
+const COFRE = {"sal": "VhmJse39H1A2ZlN8PvsRlA==", "iv": "XazXJOpwMEDE70dp", "dados": "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", "iteracoes": 310000};
 const FORM_HISTORICO = "historico-orcamentos";
 let HISTORICO, ANP, CUSTOS, RECEITA, PADRAO, TEXTOS, EQUIPE_PADRAO, __ESCOPO;
 
@@ -697,8 +697,9 @@ function calcular(){
     brownie:        Math.ceil(conv * num('cpc_brownie')),
   };
   const bebidas = q.coado + q.espresso + q.espresso_leite + q.gelada;
-  // xarope só entra em bebida de espresso/gelada
-  q.xarope = Math.round((q.espresso + q.espresso_leite + q.gelada) * num('perc_xarope')/100);
+  // Xarope só nas bebidas GELADAS — confirmado pelo usuário em 18/08/2026.
+  // Antes contava espresso e espresso com leite também, o que inflava o custo.
+  q.xarope = Math.round(q.gelada * num('perc_xarope')/100);
 
   // --- café coado: o custo vem por leva de 1,6L, não por copo
   const levas   = Math.ceil(q.coado / RECEITA.copos_por_leva);
@@ -937,10 +938,10 @@ function render(){
   }
   if (r.margem_real < 0) av.push('<b>Este evento dá prejuízo.</b>');
   else if (r.preco > 0 && r.margem_real < 0.35) av.push('Margem bem abaixo do que vocês praticam (cerca de 75% no café e 65% nos Bites). Foi de propósito?');
-  // xarope só entra em espresso, espresso com leite e gelada. Com só café
-  // coado no orçamento, a % fica valendo nada e desaparecia em silêncio.
-  if (num('perc_xarope') > 0 && (r.q.espresso + r.q.espresso_leite + r.q.gelada) === 0)
-    av.push('A <b>% de xarope</b> não se aplica: xarope só entra em espresso, espresso com leite e geladas — e não há nenhuma no orçamento.');
+  // xarope só entra nas geladas. Sem geladas, a % fica valendo nada — e
+  // desaparecia em silêncio.
+  if (num('perc_xarope') > 0 && r.q.gelada === 0)
+    av.push('A <b>% de xarope</b> não se aplica: xarope só entra nas bebidas geladas, e não há nenhuma no orçamento.');
   const nb = EQUIPE.length;
   if (r.bebidas > 0 && nb === 0) av.push('Nenhuma pessoa na equipe.');
   // equipe sem valor = margem falsa, e é o erro mais caro que dá pra cometer aqui
@@ -1070,12 +1071,7 @@ function gerarPDF(){
     // e com espresso E gelada juntos a proposta prometia xarope só nas geladas,
     // embora o cliente pagasse pelos dois. Agora é item próprio, que nomeia
     // exatamente onde se aplica.
-    if (r.q.xarope){
-      const onde = [];
-      if (r.q.espresso || r.q.espresso_leite) onde.push('as bebidas de espresso');
-      if (r.q.gelada) onde.push('as geladas');
-      bebidas.push('<b>Xaropes:</b> para saborizar ' + listaPt(onde) + ', conforme o gosto de cada convidado.');
-    }
+    if (r.q.xarope) bebidas.push('<b>Xaropes:</b> para saborizar as bebidas geladas, conforme o gosto de cada convidado.');
     // O investimento é UM para todo o serviço de bebidas. Com mais de um item
     // ele precisa dizer isso, senão parece que o valor é só do último.
     bebidas[bebidas.length-1] += bebidas.length > 1
