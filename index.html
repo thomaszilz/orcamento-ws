@@ -117,7 +117,7 @@ input[type=number]{font-variant-numeric:tabular-nums}
 .ip[data-suf="por convidado"] input{padding-right:92px}
 .ip:focus-within:before,.ip:focus-within:after{color:var(--am)}
 /* números calculados, não digitáveis */
-.calc{padding:9px 11px;border:1px dashed var(--linha);border-radius:8px;font-size:14px;
+.calc{display:block;padding:9px 11px;border:1px dashed var(--linha);border-radius:8px;font-size:14px;
       background:#F6F1E9;color:var(--br);font-weight:600;font-variant-numeric:tabular-nums}
 .calc small{color:var(--fraco);font-weight:600;font-size:11px}
 /* margem por produto: nome | custo | margem | preço */
@@ -236,6 +236,7 @@ select.modo:focus{outline:0;border-color:var(--gd);box-shadow:0 0 0 3px rgba(232
 .res-l{display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:13px;gap:10px}
 .res-l span:last-child{font-variant-numeric:tabular-nums;white-space:nowrap}
 .res-l.zero{opacity:.35}
+.res-l.sub{color:var(--fraco)}   /* custo/margem do bloco: fraco, mas legivel */
 .tot{border-top:2px solid var(--br);margin-top:10px;padding-top:10px;font-size:15px}
 .preco{background:linear-gradient(120deg,var(--br) 0%,var(--br2) 100%);color:#F0E9DF;border-radius:var(--ra);
        padding:18px;margin-top:16px;text-align:center;box-shadow:var(--shh)}
@@ -251,6 +252,22 @@ select.modo:focus{outline:0;border-color:var(--gd);box-shadow:0 0 0 3px rgba(232
 .exposicao b{color:var(--br)}
 /* números que são estimativa, não promessa */
 .qtd.est{color:var(--amt)}
+.nota-info{background:#F4EFE7;border:1px solid #E2D6C4;border-radius:10px;padding:9px 12px;
+           font-size:12.5px;color:#5A4A3B;margin-bottom:8px}
+.aviso-l+.aviso-l{margin-top:5px}
+/* indicador de foco: precisa de 3:1, e a borda doirada dava 2,2:1 */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;
+                       transition-duration:.01ms!important;scroll-behavior:auto!important}
+  /* cor continua mudando; o que some e deslocamento e escala */
+  .b1:hover,.hitem:hover,.card:hover{transform:none!important}
+}
+@media (hover:none){
+  /* sem mouse nao existe "sair do hover": o botao ficava levantado */
+  .b1:hover,.hitem:hover{transform:none}
+}
+input:focus-visible,select:focus-visible,button:focus-visible,summary:focus-visible,
+[tabindex]:focus-visible{outline:2px solid var(--amt);outline-offset:2px;border-radius:6px}
 .aviso{background:#FDF2E7;border:1px solid #F0D5B5;border-left:3px solid var(--alerta);color:var(--alerta);
        border-radius:8px;padding:10px 12px;font-size:12px;margin-bottom:12px;line-height:1.55}
 table.tw{width:100%;border-collapse:collapse;font-size:12.5px}
@@ -347,6 +364,7 @@ details.custos[open] summary:before{content:'▾ '}
 #proposta .nota{font-size:9.5px;opacity:.72;margin:2mm 0 6mm}
 #proposta .obs{margin:0 0 6mm;padding-left:20px}
 #proposta .obs li{margin-bottom:6px}
+#proposta .desc{text-align:right;font-size:10px;margin:0 0 2mm;opacity:.85}
 #proposta .tot{font-size:14px;margin-bottom:7mm}
 #proposta .sec{font-weight:700;margin-bottom:3px}
 #proposta .ass{text-align:center;margin-top:12mm;line-height:1.7}
@@ -382,10 +400,10 @@ body.imprimindo #proposta{display:block;box-shadow:0 10px 40px rgba(0,0,0,.5)}
         d="M1.5 12S5 5.5 12 5.5 22.5 12 22.5 12 19 18.5 12 18.5 1.5 12 1.5 12Z"/><circle
         cx="12" cy="12" r="3.2"/><line class="risco" x1="3.5" y1="20.5" x2="20.5" y2="3.5"/></svg></button>
     </div>
-    <label class="porta-lembrar"><input type="checkbox" id="lembrar" checked> Continuar conectado neste navegador</label>
+    <label class="porta-lembrar"><input type="checkbox" id="lembrar"> Continuar conectado neste navegador</label>
     <button class="b1" type="submit" id="btn_entrar">Entrar</button>
     <div class="porta-erro" id="porta_erro"></div>
-    <div class="porta-versao">versão de 19/08/2026 às 11:20</div>
+    <div class="porta-versao">versão de 19/08/2026 às 11:58</div>
   </form>
 </div>
 
@@ -433,26 +451,26 @@ body.imprimindo #proposta{display:block;box-shadow:0 10px 40px rgba(0,0,0,.5)}
       <h2><span class="num">1</span>O evento</h2>
       <div class="dica">Aparece na proposta que vai para o cliente.</div>
       <div class="grade">
-        <div><label>Cliente</label><span class="ip"><input id="cliente" placeholder="Ex: Dafni Santos"></span></div>
-        <div><label>Saudação</label><span class="ip"><input id="saudacao" placeholder="Prezada Dafni"></span></div>
-        <div><label>Data</label><span class="ip"><input id="data" type="date"></span></div>
-        <div><label>Local</label><span class="ip"><input id="local" placeholder="Ex: Espaço Paraíso"></span></div>
-        <div><label>Convidados</label><span class="ip" data-suf="pessoas"><input id="convidados" type="number" min="1" step="1"></span></div>
-        <div><label>Quem está orçando</label><span class="ip"><input id="autor" placeholder="Seu nome"></span></div>
+        <div><label for="cliente">Cliente</label><span class="ip"><input id="cliente" placeholder="Ex: Maria Silva"></span></div>
+        <div><label for="saudacao">Saudação</label><span class="ip"><input id="saudacao" placeholder="Prezada Maria"></span></div>
+        <div><label for="data">Data</label><span class="ip"><input id="data" type="date"></span></div>
+        <div><label for="local">Local</label><span class="ip"><input id="local" placeholder="Ex: Espaço Paraíso"></span></div>
+        <div><label for="convidados">Convidados</label><span class="ip" data-suf="pessoas"><input id="convidados" type="number" min="1" step="1"></span></div>
+        <div><label for="autor">Quem está orçando</label><span class="ip"><input id="autor" placeholder="Seu nome"></span></div>
       </div>
 
       <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--linha)">
         <div class="dica" style="margin-bottom:11px">Digite só o início — o término e a montagem saem sozinhos. Deixe o início em branco para a proposta dizer “a combinar”.</div>
         <div class="grade">
-          <div><label>Início do serviço</label><span class="ip"><input id="h_inicio" type="time"></span></div>
-          <div><label>Duração do serviço</label><span class="ip" data-suf="horas"><input id="duracao_h" type="number" min="0" step="0.5"></span></div>
-          <div><label>Intervalo no meio do serviço</label><span class="ip" data-suf="horas"><input id="intervalo_h" type="number" min="0" step="0.5"></span></div>
-          <div><label>Montamos antes</label><span class="ip" data-suf="horas"><input id="montagem_antes_h" type="number" min="0" step="0.5"></span></div>
+          <div><label for="h_inicio">Início do serviço</label><span class="ip"><input id="h_inicio" type="time"></span></div>
+          <div><label for="duracao_h">Duração do serviço</label><span class="ip" data-suf="horas"><input id="duracao_h" type="number" min="0" step="0.5"></span></div>
+          <div><label for="intervalo_h">Intervalo no meio do serviço</label><span class="ip" data-suf="horas"><input id="intervalo_h" type="number" min="0" step="0.5"></span></div>
+          <div><label for="montagem_antes_h">Montamos antes</label><span class="ip" data-suf="horas"><input id="montagem_antes_h" type="number" min="0" step="0.5"></span></div>
         </div>
         <div class="grade" style="margin-top:11px">
-          <div><label>Montagem</label><div class="calc" id="c_montagem">—</div></div>
-          <div><label>Início</label><div class="calc" id="c_inicio">—</div></div>
-          <div><label>Término e desmontagem</label><div class="calc" id="c_fim">—</div></div>
+          <div><label for="c_montagem">Montagem</label><output class="calc" id="c_montagem">—</output></div>
+          <div><label for="c_inicio">Início</label><output class="calc" id="c_inicio">—</output></div>
+          <div><label for="c_fim">Término e desmontagem</label><output class="calc" id="c_fim">—</output></div>
         </div>
         <div class="rodape-sec" id="calc_horario">—</div>
       </div>
@@ -463,23 +481,23 @@ body.imprimindo #proposta{display:block;box-shadow:0 10px 40px rgba(0,0,0,.5)}
       <div class="dica">Você preenche <b>quanto cada convidado bebe</b>; a coluna da direita mostra o total que isso dá.</div>
       <div class="linha-item">
         <div class="nm">Café coado<small id="nm_coado">Máquina Bunn · copo kraft 200ml</small><select class="modo" id="modo_coado"><option value="vontade">servido à vontade</option><option value="limitado">quantidade limitada</option></select></div>
-        <div><label>quantidade</label><span class="ip" data-suf="por convidado"><input id="bpc_coado" type="number" min="0" step="0.1"></span></div>
+        <div><label for="bpc_coado">quantidade</label><span class="ip" data-suf="por convidado"><input id="bpc_coado" type="number" min="0" step="0.1"></span></div>
         <div class="qtd" id="q_coado">—</div></div>
       <div class="linha-item">
         <div class="nm">Espresso puro<small id="nm_espresso">—</small><select class="modo" id="modo_espresso"><option value="vontade">servido à vontade</option><option value="limitado">quantidade limitada</option></select></div>
-        <div><label>quantidade</label><span class="ip" data-suf="por convidado"><input id="bpc_espresso" type="number" min="0" step="0.1"></span></div>
+        <div><label for="bpc_espresso">quantidade</label><span class="ip" data-suf="por convidado"><input id="bpc_espresso" type="number" min="0" step="0.1"></span></div>
         <div class="qtd" id="q_espresso">—</div></div>
       <div class="linha-item">
         <div class="nm">Espresso com leite<small id="nm_esp_leite">—</small><small class="segue">segue o modo do espresso</small></div>
-        <div><label>quantidade</label><span class="ip" data-suf="por convidado"><input id="bpc_espresso_leite" type="number" min="0" step="0.1"></span></div>
+        <div><label for="bpc_espresso_leite">quantidade</label><span class="ip" data-suf="por convidado"><input id="bpc_espresso_leite" type="number" min="0" step="0.1"></span></div>
         <div class="qtd" id="q_espresso_leite">—</div></div>
       <div class="linha-item">
         <div class="nm">Bebida gelada<small id="nm_gelada">—</small><select class="modo" id="modo_gelada"><option value="vontade">servido à vontade</option><option value="limitado">quantidade limitada</option></select></div>
-        <div><label>quantidade</label><span class="ip" data-suf="por convidado"><input id="bpc_gelada" type="number" min="0" step="0.1"></span></div>
+        <div><label for="bpc_gelada">quantidade</label><span class="ip" data-suf="por convidado"><input id="bpc_gelada" type="number" min="0" step="0.1"></span></div>
         <div class="qtd" id="q_gelada">—</div></div>
       <div class="linha-item">
         <div class="nm">Com xarope<small>Só nas bebidas geladas</small></div>
-        <div><label>das geladas</label><span class="ip" data-suf="%"><input id="perc_xarope" type="number" min="0" max="100" step="5"></span></div>
+        <div><label for="perc_xarope">das geladas</label><span class="ip" data-suf="%"><input id="perc_xarope" type="number" min="0" max="100" step="5"></span></div>
         <div class="qtd" id="q_xarope">—</div></div>
       <div class="copos">
         <div class="dica" style="margin-bottom:10px">Os copos vêm do catálogo da Azevedo. <b>Copo maior muda o rendimento do café passado</b> — 1,6 L rende menos copos.</div>
@@ -497,14 +515,14 @@ body.imprimindo #proposta{display:block;box-shadow:0 10px 40px rgba(0,0,0,.5)}
       <div class="modo-bloco"><label for="modo_bites">Como são vendidos</label><select class="modo" id="modo_bites"><option value="vontade">servido à vontade</option><option value="limitado">quantidade limitada</option></select></div>
       <div class="linha-item">
         <div class="nm">Pão de queijo<small>90 gramas cada</small></div>
-        <div><label>quantidade</label><span class="ip" data-suf="por convidado"><input id="cpc_pao_queijo" type="number" min="0" step="0.25"></span></div>
+        <div><label for="cpc_pao_queijo">quantidade</label><span class="ip" data-suf="por convidado"><input id="cpc_pao_queijo" type="number" min="0" step="0.25"></span></div>
         <div class="qtd" id="q_pao_queijo">—</div></div>
       <div class="linha-item">
         <div class="nm">Mini brownie<small id="nm_brownie">—</small></div>
-        <div><label>quantidade</label><span class="ip" data-suf="por convidado"><input id="cpc_brownie" type="number" min="0" step="0.5"></span></div>
+        <div><label for="cpc_brownie">quantidade</label><span class="ip" data-suf="por convidado"><input id="cpc_brownie" type="number" min="0" step="0.5"></span></div>
         <div class="qtd" id="q_brownie">—</div></div>
       <div class="grade" style="margin-top:12px">
-        <div><label>Pedaços por brownie</label><span class="ip" data-suf="pedaços"><input id="pedacos_por_brownie" type="number" min="1" max="12" step="1"></span></div>
+        <div><label for="pedacos_por_brownie">Pedaços por brownie</label><span class="ip" data-suf="pedaços"><input id="pedacos_por_brownie" type="number" min="1" max="12" step="1"></span></div>
       </div>
       <div class="rodape-sec" id="calc_brownie">—</div>
     </div>
@@ -513,13 +531,13 @@ body.imprimindo #proposta{display:block;box-shadow:0 10px 40px rgba(0,0,0,.5)}
       <h2><span class="num">4</span>Equipe</h2>
       <div class="dica">Quem vai e quanto custa. Cada pessoa pode ser cobrada <b>por hora</b> (multiplica pelas horas no local) ou por <b>valor fechado</b>.</div>
       <div class="grade" style="margin-bottom:14px">
-        <div><label>Horas no local</label><div class="calc" id="c_horas_local">—</div></div>
+        <div><label for="c_horas_local">Horas no local</label><output class="calc" id="c_horas_local">—</output></div>
       </div>
       <div id="equipe_lista"></div>
       <button class="b3" onclick="addPessoa()">+ Adicionar pessoa</button>
       <div class="grade" style="margin-top:14px">
-        <div><label>Acréscimo</label><span class="ip" data-suf="%"><input id="acrescimo_pct" type="number" min="0" max="200" step="5"></span></div>
-        <div><label>Outros custos</label><span class="ip" data-pre="R$"><input id="outros_custos" type="number" min="0" step="10"></span></div>
+        <div><label for="acrescimo_pct">Acréscimo</label><span class="ip" data-suf="%"><input id="acrescimo_pct" type="number" min="0" max="200" step="5"></span></div>
+        <div><label for="outros_custos">Outros custos</label><span class="ip" data-pre="R$"><input id="outros_custos" type="number" min="0" step="10"></span></div>
       </div>
       <div class="rodape-sec" id="calc_equipe">—</div>
     </div>
@@ -528,10 +546,10 @@ body.imprimindo #proposta{display:block;box-shadow:0 10px 40px rgba(0,0,0,.5)}
       <h2><span class="num">5</span>Deslocamento</h2>
       <div class="dica">O combustível sai do consumo real do carro, não de um valor por km chutado. O preço da gasolina vem do levantamento da ANP — dá para sobrescrever se vocês pagam outro.</div>
       <div class="grade">
-        <div><label>Ida e volta</label><span class="ip" data-suf="km"><input id="km" type="number" min="0" step="1"></span></div>
-        <div><label>Consumo do carro</label><span class="ip" data-suf="km por litro"><input id="consumo" type="number" min="0.1" step="0.5"></span></div>
-        <div><label>Gasolina</label><span class="ip" data-pre="R$" data-suf="por litro"><input id="preco_combustivel" type="number" min="0" step="0.05"></span></div>
-        <div><label>Pedágio e estacionamento</label><span class="ip" data-pre="R$"><input id="pedagio" type="number" min="0" step="5"></span></div>
+        <div><label for="km">Ida e volta</label><span class="ip" data-suf="km"><input id="km" type="number" min="0" step="1"></span></div>
+        <div><label for="consumo">Consumo do carro</label><span class="ip" data-suf="km por litro"><input id="consumo" type="number" min="0.1" step="0.5"></span></div>
+        <div><label for="preco_combustivel">Gasolina</label><span class="ip" data-pre="R$" data-suf="por litro"><input id="preco_combustivel" type="number" min="0" step="0.05"></span></div>
+        <div><label for="pedagio">Pedágio e estacionamento</label><span class="ip" data-pre="R$"><input id="pedagio" type="number" min="0" step="5"></span></div>
       </div>
       <div class="rodape-sec" id="fonte_anp">—</div>
       <div class="rodape-sec" id="calc_litros" style="border-top:0;padding-top:0">—</div>
@@ -541,7 +559,7 @@ body.imprimindo #proposta{display:block;box-shadow:0 10px 40px rgba(0,0,0,.5)}
         <div class="dica" style="margin:7px 0 0">Vai no carro especial — que consome igual, 9 km por litro — mas exige mais equipe para montar e desmontar no local.</div>
         <div id="box_bancada" style="display:none;margin-top:12px">
           <div class="grade">
-            <div><label>Montagem e desmontagem</label><span class="ip" data-pre="R$"><input id="montagem_bancada" type="number" min="0" step="50"></span></div>
+            <div><label for="montagem_bancada">Montagem e desmontagem</label><span class="ip" data-pre="R$"><input id="montagem_bancada" type="number" min="0" step="50"></span></div>
           </div>
         </div>
       </div>
@@ -549,9 +567,9 @@ body.imprimindo #proposta{display:block;box-shadow:0 10px 40px rgba(0,0,0,.5)}
 
     <div class="card" style="--ac:#2E7D5B">
       <h2><span class="num">6</span>Precificação</h2>
-      <div class="dica">A margem é sobre o preço de venda: <b>75% quer dizer que 75% do que o cliente paga sobra</b> depois do custo e do imposto. São duas porque no café vocês vendem o barista e a experiência; nos Bites, o produto — foi o que a proposta da Dafni Santos revelou.</div>
+      <div class="dica">A margem é sobre o <b>preço de venda</b>, não sobre o custo: a porcentagem que você digita é a fatia do que o cliente paga que sobra depois do custo e do imposto. São diferentes por produto porque no café vocês vendem o barista e a experiência; nos Bites, o produto.</div>
       <div class="grade">
-        <div><label>Imposto</label><span class="ip" data-suf="%"><input id="imposto_pct" type="number" min="0" max="50" step="0.5"></span></div>
+        <div><label for="imposto_pct">Imposto</label><span class="ip" data-suf="%"><input id="imposto_pct" type="number" min="0" max="50" step="0.5"></span></div>
       </div>
 
       <div style="margin-top:16px">
@@ -580,14 +598,14 @@ body.imprimindo #proposta{display:block;box-shadow:0 10px 40px rgba(0,0,0,.5)}
         <div class="dica" style="margin-bottom:11px">Cada bloco tem seu preço, como na sua proposta. <b>Deixe em branco para aceitar a sugestão</b> da margem alvo, ou digite o preço que você quer cobrar e veja a margem que sobra.</div>
         <div class="linha-item">
           <div class="nm">Fornecimento de café<small id="sug_cafe">—</small></div>
-          <div style="grid-column:span 2"><label>preço cobrado</label><span class="ip" data-pre="R$"><input id="preco_cafe" type="number" min="0" step="50" placeholder="usar sugestão"></span></div>
+          <div style="grid-column:span 2"><label for="preco_cafe">preço cobrado</label><span class="ip" data-pre="R$"><input id="preco_cafe" type="number" min="0" step="50" placeholder="usar sugestão"></span></div>
         </div>
         <div class="linha-item">
           <div class="nm">Coffee Bites<small id="sug_bites">—</small></div>
-          <div style="grid-column:span 2"><label>preço cobrado</label><span class="ip" data-pre="R$"><input id="preco_bites" type="number" min="0" step="50" placeholder="usar sugestão"></span></div>
+          <div style="grid-column:span 2"><label for="preco_bites">preço cobrado</label><span class="ip" data-pre="R$"><input id="preco_bites" type="number" min="0" step="50" placeholder="usar sugestão"></span></div>
         </div>
         <div class="grade" style="margin-top:12px">
-          <div><label>Desconto no fechamento</label><span class="ip" data-pre="R$"><input id="desconto_fechamento" type="number" min="0" step="50"></span></div>
+          <div><label for="desconto_fechamento">Desconto no fechamento</label><span class="ip" data-pre="R$"><input id="desconto_fechamento" type="number" min="0" step="50"></span></div>
         </div>
         <div class="rodape-sec" id="calc_soma">—</div>
       </div>
@@ -595,9 +613,9 @@ body.imprimindo #proposta{display:block;box-shadow:0 10px 40px rgba(0,0,0,.5)}
       <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--linha)">
         <div class="dica" style="margin-bottom:11px">Condições que aparecem na proposta.</div>
         <div class="grade">
-          <div><label>Desconto PIX à vista</label><span class="ip" data-suf="%"><input id="desconto_pix_pct" type="number" min="0" max="30" step="0.5"></span></div>
-          <div><label>Parcelas</label><span class="ip" data-suf="vezes"><input id="parcelas" type="number" min="1" max="6" step="1"></span></div>
-          <div><label>Validade</label><span class="ip" data-suf="dias"><input id="validade_dias" type="number" min="1" step="1"></span></div>
+          <div><label for="desconto_pix_pct">Desconto PIX à vista</label><span class="ip" data-suf="%"><input id="desconto_pix_pct" type="number" min="0" max="30" step="0.5"></span></div>
+          <div><label for="parcelas">Parcelas</label><span class="ip" data-suf="vezes"><input id="parcelas" type="number" min="1" max="6" step="1"></span></div>
+          <div><label for="validade_dias">Validade</label><span class="ip" data-suf="dias"><input id="validade_dias" type="number" min="1" step="1"></span></div>
         </div>
       </div>
     </div>
@@ -662,6 +680,7 @@ body.imprimindo #proposta{display:block;box-shadow:0 10px 40px rgba(0,0,0,.5)}
 
   <ul class="obs" id="p_obs"></ul>
 
+  <div class="desc" id="p_desconto" style="display:none"></div>
   <div class="tot"><b>Investimento em todos os itens:</b> <span id="p_valor">—</span></div>
 
   <div class="sec">Sobre o pagamento:</div>
@@ -681,7 +700,7 @@ body.imprimindo #proposta{display:block;box-shadow:0 10px 40px rgba(0,0,0,.5)}
 // Custos, margens e histórico chegam cifrados com AES-256-GCM. A senha vira
 // chave via PBKDF2 (mesmos parâmetros do lado Python). Abrir o código-fonte
 // mostra só bytes aleatórios — não há o que espiar.
-const COFRE = {"sal": "GIMJCu0qOc17O2Lilu7h6Q==", "iv": "cM3sFd6gPJ8UdqCj", "dados": "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", "iteracoes": 310000};
+const COFRE = {"sal": "N2YqFO+QHwyoyVpkA7YaWQ==", "iv": "L4O5Q1oYSoC587/2", "dados": "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", "iteracoes": 310000};
 const FORM_HISTORICO = "historico-orcamentos";
 let HISTORICO, ANP, CUSTOS, RECEITA, PADRAO, TEXTOS, EQUIPE_PADRAO, __ESCOPO, COPOS, ENCHIMENTO;
 
@@ -735,9 +754,12 @@ const custoCopo = k => { const x = copo(k); return x.custo + (x.tampa || 0); };
 const coposPorLeva = () => Math.max(1, Math.floor(RECEITA.rende_ml / (copo('coado').ml * ENCHIMENTO)));
 // escapa o que o usuário digita antes de ir para innerHTML (& antes de tudo,
 // senão re-escapa o que já foi escapado)
-const esc = v => String(v||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const esc = v => String(v||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 // 1 brownie = 70g; o mini é 70/pedaços. Fonte única: tela e proposta usam esta.
 const gramasMini = pedacos => Math.round(700/pedacos)/10;
+// Quantidade escrita na carta: milhar em pt-BR e singular quando e 1.
+// Antes saia "1 copos" e "1000 copos" - as duas coisas na mesma linha.
+const qtdPt = (v, sing, plur) => hnum(v) + ' ' + (Math.abs(v) === 1 ? sing : plur);
 
 function calcular(){
   const conv = Math.max(0, Math.round(num('convidados')));
@@ -781,7 +803,9 @@ function calcular(){
 
   const equipe  = EQUIPE.reduce((s, p) => s + custoPessoa(p), 0);
   // combustível pelo consumo real do carro, + pedágio/estacionamento
-  const litros  = num('km') / Math.max(num('consumo'), 0.1);
+  // sem consumo nao da para calcular litro - antes o piso de 0,1 fazia a
+  // conta MULTIPLICAR por 10 em silencio (120 km / 0,1 = 1.200 litros).
+  const litros  = num('consumo') > 0 ? num('km') / num('consumo') : 0;
   const desloc  = litros * num('preco_combustivel') + num('pedagio');
   const montagem = chk('levar_bancada') ? num('montagem_bancada') : 0;
   const outros  = num('outros_custos');
@@ -854,6 +878,7 @@ function calcular(){
           dir_cafe,dir_bites,custo_cafe,custo_bites,sug_cafe,sug_bites,PROD,indiretos,
           preco_cafe,preco_bites,manual_cafe,manual_bites,
           margem_cafe: mg(preco_cafe, custo_cafe), margem_bites: mg(preco_bites, custo_bites),
+          margem_pix: mg(preco * (1 - num('desconto_pix_pct')/100), custo),
           // parcelas sempre inteiras: o texto da proposta arredonda, e se o
           // cálculo não arredondar junto, "3 parcelas de X" não soma o total
           np, pix: preco * (1 - num('desconto_pix_pct')/100), parcela: preco/np};
@@ -901,7 +926,7 @@ function render(){
   const sufixoModo = k => modo(k)==='vontade'
       ? ' · a quantidade é sua estimativa de consumo'
       : ' · a quantidade vai escrita na proposta';
-  $('nm_coado').textContent = 'Máquina Bunn · copo kraft 200ml' + sufixoModo('coado');
+  $('nm_coado').textContent = 'Máquina Bunn · ' + copo('coado').nome + sufixoModo('coado');
   $('nm_espresso').textContent = 'Máquina profissional · ' + hnum(dose_g) + ' gramas de café' + sufixoModo('espresso');
   $('nm_esp_leite').textContent = 'Cappuccino, latte · ' + hnum(dose_g) + ' gramas de café + ' +
       hnum(leite_ml) + ' ml de leite';
@@ -971,7 +996,7 @@ function render(){
   const pct = v => (v*100).toFixed(0) + '%';
   const bloco = (nome, cu, pr, mgm, manual) => pr <= 0 ? '' :
     `<div class="res-l" style="margin-top:4px"><span><b>${nome}</b>${manual?' <span class="pill">seu preço</span>':''}</span><span><b>${brl(pr)}</b></span></div>` +
-    `<div class="res-l zero" style="padding-top:0;font-size:11.5px"><span>custo ${brl(cu)} · margem ${pct(mgm)}</span><span></span></div>`;
+    `<div class="res-l sub" style="padding-top:0;font-size:11.5px"><span>custo ${brl(cu)} · margem ${pct(mgm)}</span><span></span></div>`;
 
   $('res').innerHTML =
     l('Café coado <span class="pill">'+r.levas+' levas</span>', r.custo_coado) +
@@ -1039,14 +1064,27 @@ function render(){
   // que não quer dizer nada
   if (r.preco <= 0){
     if (r.custo > 0) av.push('<b>Já há ' + brl(r.custo) + ' de custo, mas nenhuma bebida ou Bite no orçamento</b> — sem item para vender, o preço fica zerado.');
-  } else {
-    av.push('Margem real do evento: <b>' + hnum(+(r.margem_real*100).toFixed(1)) + '%</b>' +
-            (r.desconto > 0 ? ' — o desconto no fechamento come margem' : '') + '.');
   }
+  const info = r.preco > 0
+    ? 'Margem real do evento: <b>' + hnum(+(r.margem_real*100).toFixed(1)) + '%</b>' +
+      (r.desconto > 0 ? ' — já com o desconto no fechamento' : '') +
+      (num('desconto_pix_pct') > 0 ? '. Se o cliente pagar no PIX, cai para <b>' +
+        hnum(+(r.margem_pix*100).toFixed(1)) + '%</b>' : '') + '.'
+    : '';
   if (r.margem_real < 0) av.push('<b>Este evento dá prejuízo.</b>');
-  else if (r.preco > 0 && r.margem_real < 0.35) av.push('Margem bem abaixo do que vocês praticam (cerca de 75% no café e 65% nos Bites). Foi de propósito?');
+  else if (r.preco > 0 && r.margem_real < 0.35) av.push('Margem bem abaixo do que vocês praticam (cerca de ' + hnum(PADRAO.margem_coado_pct) + '% no café e ' + hnum(PADRAO.margem_pao_queijo_pct) + '% nos Bites). Foi de propósito?');
   // xarope só entra nas geladas. Sem geladas, a % fica valendo nada — e
   // desaparecia em silêncio.
+  // sem consumo o combustivel simplesmente nao e calculado - antes ele era
+  // multiplicado por 10 em silencio
+  // copo sem CMC entra em toda bebida - o aviso existia so no log
+  const copoRuim = [copo('coado'), copo('espresso'), copo('gelada')]
+        .filter(c => c && c.alerta).map(c => c.nome);
+  if (copoRuim.length)
+    av.push('Sem custo no Omie para ' + listaPt([...new Set(copoRuim)]) +
+            ' — está sendo usado um <b>valor de emergência</b>, e o copo entra em toda bebida.');
+  if (num('km') > 0 && num('consumo') <= 0)
+    av.push('Falta o <b>consumo do carro</b> (km por litro) — sem ele o combustível não entra no custo.');
   if (num('perc_xarope') > 0 && r.q.gelada === 0)
     av.push('A <b>% de xarope</b> não se aplica: xarope só entra nas bebidas geladas, e não há nenhuma no orçamento.');
   const nb = EQUIPE.length;
@@ -1066,7 +1104,10 @@ function render(){
     const hIni = parseInt($('h_inicio').value.split(':')[0], 10);
     if (hr2.vira || hIni >= 22 || hIni < 6) av.push('O serviço entra pela <b>madrugada</b> e não há acréscimo na equipe. Foi de propósito?');
   }
-  $('conferencia').innerHTML = av.length ? '<div class="aviso">' + av.join('<br>') + '</div>' : '';
+  // informacao neutra e alerta nao moram na mesma caixa
+  $('conferencia').innerHTML =
+      (info ? '<div class="nota-info">' + info + '</div>' : '') +
+      (av.length ? '<div class="aviso">' + av.map(x => '<div class="aviso-l">' + x + '</div>').join('') + '</div>' : '');
 
   salvar();
 }
@@ -1128,7 +1169,7 @@ function horarios(){
           vira: fim.getDate() !== base.getDate(), antevespera: mont.getDate() !== base.getDate()};
 }
 
-const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const MESES = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
 const porExtenso = d => d.getDate() + ' de ' + MESES[d.getMonth()] + ' de ' + d.getFullYear();
 const curta = d => String(d.getDate()).padStart(2,'0') + '/' + String(d.getMonth()+1).padStart(2,'0');
 
@@ -1158,9 +1199,9 @@ function gerarPDF(){
   $('p_h_montagem').textContent = hr.montagem + (hr.antevespera ? ' do dia anterior' : '');
   $('p_h_inicio').textContent = hr.inicio;
   $('p_h_fim').textContent = hr.fim + (hr.vira ? ' do dia seguinte' : '') +
-      (num('duracao_h') ? ' (' + hnum(num('duracao_h')) + ' horas de serviço' +
-        (num('intervalo_h') > 0 ? ', com ' + hnum(num('intervalo_h')) + 'h de intervalo' : '') + ')' : '');
-  $('p_convidados').textContent = r.conv + ' pessoas';
+      (num('duracao_h') ? ' (' + qtdPt(num('duracao_h'), 'hora', 'horas') + ' de serviço' +
+        (num('intervalo_h') > 0 ? ', com ' + qtdPt(num('intervalo_h'), 'hora', 'horas') + ' de intervalo' : '') + ')' : '');
+  $('p_convidados').textContent = qtdPt(r.conv, 'pessoa', 'pessoas');
   $('p_saudacao').textContent = txt('saudacao', 'Prezado(a) ' + nome1).replace(/,?\s*$/, '') + ',';
 
   // ---- itens numerados. As geladas são um SERVIÇO À PARTE, não um detalhe
@@ -1176,21 +1217,27 @@ function gerarPDF(){
     if (r.q.coado) bebidas.push('<b>Fornecimento de café passado:</b> Café do produtor Adauto Guimarães (Notas de Chocolate, nozes, leve acidez) ' +
       (md('coado')==='vontade'
         ? 'servido <b>à vontade</b> para o público.'
-        : 'servido em <b>' + r.q.coado + ' copos</b> de ' + hnum(Math.round(copo('coado').ml * ENCHIMENTO)) + ' ml.') +
+        : 'servido em <b>' + qtdPt(r.q.coado, 'copo', 'copos') + '</b> de ' + hnum(Math.round(copo('coado').ml * ENCHIMENTO)) + ' mililitros.') +
       ' Feito na torre de passar café e servido com nossos copos duplos descartáveis podendo ser personalizados com o logo do evento.');
     if (r.q.espresso || r.q.espresso_leite){
       const quais = [];
-      if (r.q.espresso) quais.push(r.q.espresso + ' espressos');
-      if (r.q.espresso_leite) quais.push(r.q.espresso_leite + ' bebidas com leite');
-      bebidas.push('<b>Espresso e bebidas com leite:</b> ' +
+      if (r.q.espresso) quais.push(qtdPt(r.q.espresso, 'espresso', 'espressos'));
+      if (r.q.espresso_leite) quais.push(qtdPt(r.q.espresso_leite, 'bebida com leite', 'bebidas com leite'));
+      // sem espresso puro no orçamento a carta não pode prometer espresso, e
+      // "extraídos" tem que concordar com o que de fato está sendo vendido
+      const soLeite = !r.q.espresso && r.q.espresso_leite;
+      bebidas.push('<b>' + (soLeite ? 'Bebidas com leite' : 'Espresso e bebidas com leite') + ':</b> ' +
         (md('espresso')==='vontade'
-          ? 'extraídos na hora em máquina profissional por nossos baristas — espresso, cappuccino, latte e afins, <b>à vontade</b> para o público.'
-          : '<b>' + listaPt(quais) + '</b>, extraídos na hora em máquina profissional por nossos baristas.'));
+          ? (soLeite
+              ? 'preparadas na hora em máquina profissional por nossos baristas — cappuccino, latte e afins, <b>à vontade</b> para o público.'
+              : 'extraídos na hora em máquina profissional por nossos baristas — espresso, cappuccino, latte e afins, <b>à vontade</b> para o público.')
+          : '<b>' + listaPt(quais) + '</b>, ' + (soLeite ? 'preparadas' : 'extraídos') +
+            ' na hora em máquina profissional por nossos baristas.'));
     }
     if (r.q.gelada) bebidas.push('<b>Bebidas geladas:</b> ' +
       (md('gelada')==='vontade'
         ? 'preparadas com espresso e leite, servidas em copo com tampa e canudo, <b>à vontade</b> para o público.'
-        : '<b>' + r.q.gelada + ' unidades</b>, preparadas com espresso e leite, servidas em copo com tampa e canudo.'));
+        : '<b>' + qtdPt(r.q.gelada, 'unidade', 'unidades') + '</b>, preparadas com espresso e leite, servidas em copo com tampa e canudo.'));
     // O xarope vale para TODAS as bebidas de espresso e para as geladas do
     // orçamento — não só para uma delas. Antes ele era grudado num único item,
     // e com espresso E gelada juntos a proposta prometia xarope só nas geladas,
@@ -1207,10 +1254,12 @@ function gerarPDF(){
   if (r.dir_bites > 0){
     const limitado = (($('modo_bites') || {value:'limitado'}).value) === 'limitado';
     const b = [];
-    if (r.q.pao_queijo) b.push((limitado ? '<b>' + r.q.pao_queijo + ' unidades</b> dos' : 'os') +
-        ' clássicos <b>pães de queijo*</b> da William &amp; Sons de 90g');
-    if (r.q.brownie) b.push((limitado ? '<b>' + r.q.brownie + '</b> ' : '') +
-        'mini brownies de aproximadamente ' + hnum(gramasMini(r.pedacos)) + 'g');
+    if (r.q.pao_queijo) b.push((limitado ? '<b>' + qtdPt(r.q.pao_queijo, 'unidade', 'unidades') + '</b> ' +
+        (r.q.pao_queijo === 1 ? 'do' : 'dos') : 'os') +
+        ' clássicos <b>pães de queijo*</b> da William &amp; Sons de 90 gramas');
+    if (r.q.brownie) b.push((limitado ? '<b>' + hnum(r.q.brownie) + '</b> ' : '') +
+        (r.q.brownie === 1 && limitado ? 'mini brownie' : 'mini brownies') +
+        ' de aproximadamente ' + hnum(gramasMini(r.pedacos)) + ' gramas');
     it.push('<b>Coffee Bites:</b> ' + listaPt(b) +
         (limitado ? '.' : ', <b>liberados à vontade</b> para o público.') +
         ' - <b>Investimento: ' + brl(r.preco_bites) + '</b>');
@@ -1220,20 +1269,36 @@ function gerarPDF(){
 
   // ---- observações: equipe e bancada não são vendidas à parte, são descritas
   const obs = [];
-  const nb = EQUIPE.length;
+  // so quem tem "barista" na função entra na frase que promete barista —
+  // o campo é livre, e motorista/ajudante viravam barista na carta
+  const nb = EQUIPE.filter(p => /barista/i.test(p.funcao || '')).length;
   if (nb > 0) obs.push(TEXTOS.baristas.replace('{n}', nb).replace('{s}', nb > 1 ? 's' : '') +
                        (chk('levar_bancada') ? ' ' + TEXTOS.bancada : ''));
   else if (chk('levar_bancada')) obs.push(TEXTOS.bancada);
   $('p_obs').innerHTML = obs.map(x => '<li>' + x + '</li>').join('');
 
+  // desconto explicito: sem ele os itens somam mais que o total e o cliente
+  // fica com uma diferenca sem explicacao no meio da carta
+  if (r.desconto > 0){
+    $('p_desconto').innerHTML = 'Subtotal dos itens: ' + brl(r.soma) +
+        ' &nbsp;·&nbsp; <b>Desconto no fechamento: −' + brl(r.desconto) + '</b>';
+    $('p_desconto').style.display = '';
+  } else {
+    $('p_desconto').style.display = 'none';
+  }
   $('p_valor').textContent = brl(r.preco);
 
   // ---- pagamento
   const venc = new Date(); venc.setDate(venc.getDate() + num('validade_dias'));
   const np = r.np;
   const vencs = [];
-  for (let k = 0; k < np; k++) vencs.push(curta(addMeses(venc, k)));
-  let pg = 'O valor pode ser pago em via PIX/transferência bancária na sua integralidade';
+  // com 6 parcelas as últimas caem no ano seguinte, e "05/01" não dizia qual
+  const cruzaAno = np > 1 && addMeses(venc, np-1).getFullYear() !== venc.getFullYear();
+  for (let k = 0; k < np; k++){
+    const d = addMeses(venc, k);
+    vencs.push(curta(d) + (cruzaAno ? '/' + d.getFullYear() : ''));
+  }
+  let pg = 'O valor pode ser pago via PIX ou transferência bancária, na sua integralidade';
   if (num('desconto_pix_pct') > 0) pg += ' com ' + hnum(num('desconto_pix_pct')) + '% de desconto (<b>' + brl(r.pix) + '</b>)';
   pg += ' com vencimento para o dia ' + vencs[0];
   if (np > 1) pg += ' ou em ' + np + ' parcelas de ' + hnum(+(100/np).toFixed(1)) + '% (<b>' + brl(r.parcela) +
@@ -1244,16 +1309,26 @@ function gerarPDF(){
 
   document.body.classList.add('imprimindo');
   const ajuste = ajustarUmaPagina();
+
+  // o aviso é para VOCÊ, na ferramenta — nunca no PDF do cliente.
+  // Vem ANTES do print: depois o PDF já está salvo e não adianta avisar.
+  if (ajuste.encolheu && !ajuste.coube){
+    document.body.classList.remove('imprimindo');
+    alert('Esta proposta não cabe em uma página nem no menor tamanho legível (' +
+          Math.round(ajuste.escala*100) + '%).\n\n' +
+          'O que passar do fim da folha É CORTADO — a assinatura é a primeira a sumir.\n\n' +
+          'Tire algum item ou encurte as observações antes de gerar o PDF.');
+    $('aviso_pagina').innerHTML = '<div class="aviso"><b>Esta proposta não cabe em uma página</b> nem no menor tamanho legível (' +
+        Math.round(ajuste.escala*100) + '%). Tire algum item ou encurte os textos — o que passar do fim da folha é cortado.</div>';
+    return;
+  }
   window.print();
   setTimeout(() => document.body.classList.remove('imprimindo'), 400);
 
-  // o aviso é para VOCÊ, na ferramenta — nunca no PDF do cliente
   $('aviso_pagina').innerHTML = ajuste.encolheu
-    ? (ajuste.coube
-        ? '<div class="aviso" style="background:#F0F6F2;border-color:#CADED4;border-left-color:var(--ok);color:var(--ok)">' +
-          'A proposta foi <b>reduzida a ' + Math.round(ajuste.escala*100) + '%</b> para caber em uma página.</div>'
-        : '<div class="aviso"><b>Esta proposta não cabe em uma página</b> nem no menor tamanho legível (' +
-          Math.round(ajuste.escala*100) + '%). Tire algum item ou encurte os textos — o que passar do fim da folha é cortado.</div>')
+    ? '<div class="aviso" style="background:#F0F6F2;border-color:#CADED4;border-left-color:var(--ok);color:var(--ok)">' +
+      'A proposta foi <b>reduzida a ' + Math.round(ajuste.escala*100) + '%</b> para caber em uma página.' +
+      (ajuste.escala < 0.75 ? ' Nesse tamanho a letra fica pequena para o cliente — vale encurtar.' : '') + '</div>'
     : '';
 }
 
@@ -1354,7 +1429,7 @@ function pintarHistorico(){
   $('hist_lista').innerHTML = vis.length ? vis.map(o => {
     const st = o.status || 'aberto';
     const dt = o.data ? new Date(o.data+'T00:00').toLocaleDateString('pt-BR') : 'sem data';
-    return `<div class="hitem ${st}" onclick="abrirOrc('${o.id}')">
+    return `<div class="hitem ${esc(st)}" onclick="abrirOrc('${esc(o.id)}')">
       <div class="hitem-l1">
         <span class="hitem-cli">${esc(o.cliente)}</span>
         <span class="hitem-v">${brl(o.preco||0)}</span>
@@ -1425,6 +1500,8 @@ function salvar(){
   try{ localStorage.setItem('ws_orcamento', JSON.stringify(d)); }catch(e){}
 }
 function limpar(){
+  // apaga o orcamento inteiro e nao tem desfazer
+  if (!confirm('Limpar o orçamento inteiro e voltar aos valores padrão?\n\nIsto não pode ser desfeito.')) return;
   try{ localStorage.removeItem('ws_orcamento'); }catch(e){}
   ID_ATUAL = ''; STATUS_ATUAL = 'aberto';   // limpar = orçamento novo, não sobrescreve o antigo
   CAMPOS.forEach(k => $(k).value = PADRAO[k]);
@@ -1529,7 +1606,13 @@ async function entrar(ev){
 }
 
 function sair(){
+  // Sair tem que apagar o que foi DECIFRADO, nao so a senha: ws_hist_local
+  // guarda cliente/custo/margem de cada orcamento salvo e ws_orcamento guarda
+  // todos os campos (inclusive as margens), reescrito a cada tecla. Quem
+  // sentasse na maquina depois lia tudo no console sem nunca saber a senha.
   try{ localStorage.removeItem(CHAVE_SESSAO); }catch(e){}
+  try{ localStorage.removeItem('ws_hist_local'); }catch(e){}
+  try{ localStorage.removeItem('ws_orcamento'); }catch(e){}
   location.reload();
 }
 
