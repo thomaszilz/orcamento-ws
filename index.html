@@ -207,6 +207,16 @@ select.modo:focus{outline:0;border-color:var(--gd);box-shadow:0 0 0 3px rgba(232
       padding-bottom:12px;border-bottom:1px solid #F6F1E9}
 .modo-bloco label{margin:0}
 .modo-bloco select.modo{margin-top:0}
+.copos{margin-top:14px;padding-top:14px;border-top:1px solid var(--linha)}
+.copo-lin{display:grid;grid-template-columns:1fr 210px 96px;gap:10px;align-items:center;padding:5px 0}
+.copo-lin label{margin:0;text-transform:none;font-size:12.5px;font-weight:500;
+      letter-spacing:0;color:var(--txt)}
+.copo-lin select.modo{margin-top:0;width:100%}
+.copo-custo{text-align:right;font-size:12px;color:var(--fraco);font-variant-numeric:tabular-nums}
+@media(max-width:640px){
+  .copo-lin{grid-template-columns:1fr;gap:5px;padding:9px 0;border-bottom:1px solid #F6F1E9}
+  .copo-custo{text-align:left}
+}
 @media(max-width:640px){ select.modo{width:100%;min-height:44px;font-size:16px} }
 .linha-item label{margin-bottom:3px}
 .qtd{text-align:right;font-size:15px;font-weight:700;color:var(--br);font-variant-numeric:tabular-nums;line-height:1.25}
@@ -360,7 +370,7 @@ body.imprimindo #proposta{display:block;box-shadow:0 10px 40px rgba(0,0,0,.5)}
     <label class="porta-lembrar"><input type="checkbox" id="lembrar" checked> Continuar conectado neste navegador</label>
     <button class="b1" type="submit" id="btn_entrar">Entrar</button>
     <div class="porta-erro" id="porta_erro"></div>
-    <div class="porta-versao">versão de 19/08/2026 às 09:19</div>
+    <div class="porta-versao">versão de 19/08/2026 às 09:32</div>
   </form>
 </div>
 
@@ -456,6 +466,13 @@ body.imprimindo #proposta{display:block;box-shadow:0 10px 40px rgba(0,0,0,.5)}
         <div class="nm">Com xarope<small>Só nas bebidas geladas</small></div>
         <div><label>das geladas</label><span class="ip" data-suf="%"><input id="perc_xarope" type="number" min="0" max="100" step="5"></span></div>
         <div class="qtd" id="q_xarope">—</div></div>
+      <div class="copos">
+        <div class="dica" style="margin-bottom:10px">Os copos vêm do catálogo da Azevedo. <b>Copo maior muda o rendimento do café passado</b> — 1,6 L rende menos copos.</div>
+        <div class="copo-lin"><label for="copo_coado">Copo do café passado</label><select class="modo copo" id="copo_coado"></select><span class="copo-custo" id="cc_coado">—</span></div>
+        <div class="copo-lin"><label for="copo_espresso">Copo do espresso e com leite</label><select class="modo copo" id="copo_espresso"></select><span class="copo-custo" id="cc_espresso">—</span></div>
+        <div class="copo-lin"><label for="copo_gelada">Copo das bebidas geladas</label><select class="modo copo" id="copo_gelada"></select><span class="copo-custo" id="cc_gelada">—</span></div>
+        <div class="rodape-sec" id="calc_copo">—</div>
+      </div>
       <div class="rodape-sec">Total de <b id="q_total" style="color:var(--br);font-size:14px">—</b> bebidas · <span id="q_por_hora">—</span></div>
     </div>
 
@@ -649,9 +666,9 @@ body.imprimindo #proposta{display:block;box-shadow:0 10px 40px rgba(0,0,0,.5)}
 // Custos, margens e histórico chegam cifrados com AES-256-GCM. A senha vira
 // chave via PBKDF2 (mesmos parâmetros do lado Python). Abrir o código-fonte
 // mostra só bytes aleatórios — não há o que espiar.
-const COFRE = {"sal": "QkSjwUCJxyDG/wMOtr0Eqg==", "iv": "j7sl+pR8cNbo6crM", "dados": "QOjEtEw6Z4T40xWpgI5X2Tm4RRPODj+TRcXJDRmhew6ihcdm2LJixAwWx22cfyfxewSbVlsl0BE0hrQt8FjVO/funnPeUygra7nHL2pW5wkFpJixc5BRSelyz2awrgmic6LX+E7lU7ONu1OQdpOFCFfdtHc6vSJD37GOuLIxHM0dVxOD3QtK2Hpng1PAaLB/TGEk/XacrgXFAehFFhZnM1O1C9rTgZ7tAHA5L034EwQxWUiO/Bhn08v5WnpXkMkIfDNBQwe702w0RLdAAPWIG9xy7o8OFrHa31EDGrU8+FIDhtpg/q17T9GbIfGH8v2t7SRa383eU4dowuC4Xg+u4izANSQPfT4ld6rff33OE1Qn6UnGt1SMbcmnoE8pPxdXAivyMtK0IJB6Rh9AUIHXanTYLyZn4K/eF+rpiDNV24mtfmbPSOs/6iY0KHhyOcYSxjKt60oD8k+Q+7aO60QCZM60MJQywHcW08VC2OkASJksu2GYw6bQSZPQTAEa7JqmUssa26+m/1Sk8i/K2qZWSPBdYk0b6kJQNQV4AZNq/MFEACqTwrzhcwts1AvO6ixT8V7J2Jecq/OeWn0nIOOnFyPP3fn8lG0uNrSHe7DyHChE5ZzB0cz00ABlPGiMQrvhLvzBpxMkE/J6Eo2XjeOBJyZgkfiUOOUD4JZxhpwe7KT9Nmn6CBxRffOtUFunJ3vXy220P4pf4MMpbyZ60pcIaNqfRMWKndrsjJ2EG4h7f1ORqiANwrK6Z4UJCCzHvCfE+VP6bRauT7g9cuOlvWXGF+aA67AlvJZ1cP/OXdT15/xWlMe8KpexzuRx3yhua3sExbjJ5YK9vpdI9KkWSXAYJkbuEQIE52el4e/RLxoXBeIoH7wnZ80l0mi2WThQrxBwm0LFegSL0zKhEgfBCgA4+vrD9aN701uPnqXVXEMa7ZAbX0sviLhUabPHUcQuMpU4SfsEywWnR7qBV+4RTMFpPzHqSWFxx8o4VwP+izS+qLilOmJ+NZ1h1l0l0Bza9xD/s6DeUcRGatKx1TLUshPGOYSgKfsEb9G8Yb7M1LfWbeRo12iBtg/FMNjFqR4gVA+8BrxytZALlYMSTDXAwigdRnEtH11W+qjdoXEaj2Z4BuB1a6kGIApZ6cKe9eIfkP+5WA2kXuGvLeQoGGHIFkCsbdBo1Uj4Ouk4hwB6xekRmHTNCzwHFcaf8PjETe7gwKNvcj3tke28kHcZuBtmYV/U0VcD7xpDQzRm/b6pFY6gmWeX3dcw+LPTrU/jfM0E7sXdbKAsK6W/77FGasNOhx6Z2r76I+T0JBTF6IN6FgKNhoFyVW8H+/fYmKp2botCetmmCX01T/X5D/J17C+UafigddseqMlmA5clEE97CA++HPWwgtXo3mLEBUfjCHPfDqDcx5S3vtSrqfAaxqFE20EZtTxsecELAKwxFWYuaYz3eDrp0Tx1NYD5rD6vzujoF/g6xVqWOV1nfQljwykUaBsC8tdgKlTKY/NYUsupJWQQw6fiErngQuKLX5qLKGyZ6+dUjBPfJh/y5Vh3o0Qp6iGBoJOrWpzFmHHFeRxntl+EiJvz817GQsl8FfolpiT5juBrtJogoPkF7Jb9AEpZXA0Z0eSoGnpqOBZBKydmDbIhT5LtK4ymmQr3u/qFjrXuo9mNk8RGOGk6UHOsxfjigAP8WjpTxZ6LKB1t4WX/3pffpJCnEsCJL2Oi/tV+Pq//Oiuupn5YvXMcxlIRWEbeIMa/cJgtTQ/LZaJIFdAuK/Ax6eTUJBwaZA8kfYEN0cHpRvujtOnJDSMsN0l5jQ29/plqA7rWm1qF8ydUiB7E5RaoT9APqPVKPP1RSNlSMNcfcCZuUIdEIj01PNlivZn6pxOCH3Fn6vP/CVN9KP4IGZmjnbP+HfrhJ61xS0gOkhFs8AQnmU1rPDnwTJHBaTnHi+Wk7VXMlZtAIc3dsab5t69FVhxsXJPYQqHUbeYjgczorv+Jp8fLyNyYyp7QG2m7isz7PqM54/02IAZe8QSxLr84oFS+as/ChNwQ1ejXYDfamuo9yjDhhB7wXeI0LyX3FVcSNK+q2UMJ+OQs5oFn5O9I7+k9hBr0+8mU0NZzXHTEj7mpU6XLccE8kQI6i6YDMCttu7Axj7Ql5/3HU0wQGVtH+nPPIKGoGxCyoabkEIu0eHLTcmJXvvhhed19STSFd3hFqyj/JhTrP3an2Ukp6SXDXa9K6YAZc59Qi7Jnjt2FkC87r7MfqPeHjna9N6Ltylsc6n1xmutlg7/imp+yDX+WX8wQ1gE7MAsA2l3WFfSyxUgoUMISMWUOPSSSClXY7ZYU5gdWCF3gFeuxfUkA6L+Zf88BHnposz3G/+luWbHNpKej9fwU4/ZybH8hiEXDybJKgU6g4LxSAdP16X1EUX9ZZJNDvXjd79aLxmeNhK7n8FtNctGXsbTne3IOw1gyJjMe1Cx+E43peC4T+bqzkkegTkMovylq6aOItyqNtO8oTaU73pNyj9UK2Rd/hLaIkDCaI5dMOIj6M0Z5BCO51LMfTkAqPG72nU7q3KpGkvhzbuWaxtLU6Ul2XhcfTE2Szng/aoqT0xx/UXIyppV183bOc7XejlE4pmAQKlixuWBgJohmftbhydqMafqsRQaPPhrun8oTn2dwM+gfm1qkBaKMlXDC+je4LTb9fquHzfJZeCEykEhHaWVV6pttiP1CgnY+ESzcp3oPry1fJFXogADaDxCXWDCZtzpHcbUUyTyjLjr9d/YZAtppojwXZku+TcSZL+2AVJ3d3tIZkkoJL2jxszIEssRf2dK4m+jY83pgMsXUdkiqZHvxNLv6ed1EGshFBDNp1480ODveWO+y/3YQccljT+7cjyuP/XnSOivRK32MeuZArZsoxXVmgm/10mnq3tDwqE3Bgb+BHVnW/Sj+dsaKDi4xvW2FOaO2EXaghlydG3nBbhr4gBvKh21AI+4gCGnVrZXiNM39p9xopm5b0ELD7KWIYJjc4+bseT2By1JA46aNozsN80IAV9CkCL466zr68YPX6NJef0UgWLtKxSCkWGYtc4tnvQB0vVlC3/wFoMDZfh2MVB7d6Er36FozDlCRoqfn3ilk9xQ2QQbNGobh+YtiO4gqYBpbS7Jjli2t6HoLVsC0SVb1rNWH/qJLhL1YEqJZOBCThy1LkDqb4D34kPXXaMe9PcImdZfgLNlpYFA8lnnX0c4WTs7OO2GL5q6euXeTVP4CEl1+sBg7CndqUq3lTozxoUrE9RI3tZJ+umk4UyttBoUepJYYvhofF1J8A1jc0vm/qYLT6OQXI4ZmaAr3NZI1uriaOGWmOYPfYlTJqutqt20AQZDZU0B9W9fOor27z8EphyJ8Z8TmzIxHa9i8r9+nrtf2fF6MBu8xVte96RENyvJsabu9ZniJCDMMDs+UbKQAnCyO9LQuboOZDQxwfQnqATUsy5BCIj9mmDOJUnux34H/x//9Rb1/7P6ZCFcjaE6Z1Dqi/wDvd1VENwNesh+jHcw1JplzsnT8rf62HmTNJ9fwnpa+mLUtNOK5NtHfDgltSiM0lwkFlDknh0vLrNVKbjJ76IfRXAryyLdo8qXDVO+g8EvbQ80PysOtJiu1DoFxpbASrsQWS68S/gy4olu9qqBjiB9tgsSlAujDFIFzFxyi7IAMBSZSs6i2MJpH9kjZ+v8dST1TAzI6U1oziOP2cfWXroqiKOiSxSCcSIbSr+dRahnQVFRRJfNlnGzK5/ArWt1QSwYmn8z15c8sqQimqLZA7109DnjVact8IDRuEwcdO5Xzi1zpbUD0CqY/FbilBoGpabIQt3tx+muWilDFKVOYDXPeulID5WpMZ7cQnBG61xtajmiFZMjf7DAFVm9EhVOeApTiTsZ21XtjWBx+SCQnoGdFR4RzTRfpnWSj8QqaEF5l6YZpi9D5+ID0aIQCw5V5/n21Y/7S7YgILDf5TzZgvZK9zrjmSQrqRb8W5s5ae5tRHuPtE45KSbMjacPnIS1imeRQb9ZdcUb4fAa35Ji9GLBpgKX0H36yLhCI2TyB0kRZ8aLaJK5Px0LRc/gdM0g8XCmxz02NGCkOIQVN99NlynAV0e4Y4K7KdHpe3qK9gHYNBDGD9Xoex7XcA/dg1aXm4k/6eTtb3vq7F8cqpg2fyNZKBvhDiCD1rWC71hwbCf9FnvS56OPgF7ShFqMhv4cVVraY6MvJMGq+h32P2gmIQOekGHQNZUmHwxUY9xi6rYpWLQNn9Q/kW0yuG1g+kTwNU5Y7lsa/Ewpmq39YyfoTv1u8iJaOq7qOuNt75xgSLHUHw3WtasZ5O07pci8wiKvtBFQSYkHAwQRtn7ghUh1h9fT2M5B0sGr//qmY3Tkxkou9WyKUeWmHSnIICC+UVybDIyEkh5pllbpkmFK9KSp6/x6E+BgJ3Fpu4GgIC7hhOhvyfi/yGMUJ9L2spQzGCiZqpVO6XOUCehbX0DLYqIABpvyWTnHUTOlEI4++a2Yyjz8YamXh4wsLOdWdQhLisTPaoLuefHF1/yEtnBUuacV/FRznta2ngdnzq8EWBFLQQCQdCHbKJIMcygjp25RIm/BJQX4g0VAcnFSfsKEwu6zDbfU7/3GGq0giWuPPBMwtcgMRMJpli5uLe5AeJKE=", "iteracoes": 310000};
+const COFRE = {"sal": "eSX0PDfCECNECybakiBPJA==", "iv": "sKspdMdbLsnTVcyp", "dados": "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", "iteracoes": 310000};
 const FORM_HISTORICO = "historico-orcamentos";
-let HISTORICO, ANP, CUSTOS, RECEITA, PADRAO, TEXTOS, EQUIPE_PADRAO, __ESCOPO;
+let HISTORICO, ANP, CUSTOS, RECEITA, PADRAO, TEXTOS, EQUIPE_PADRAO, __ESCOPO, COPOS, ENCHIMENTO;
 
 const b64bytes = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
 
@@ -681,6 +698,7 @@ async function abrirCofre(senha){
   const d = JSON.parse(new TextDecoder().decode(claro));
   CUSTOS = d.custos; RECEITA = d.receita; PADRAO = d.padrao; TEXTOS = d.textos;
   EQUIPE_PADRAO = d.equipe; ANP = d.anp; __ESCOPO = d.escopo; HISTORICO = d.historico || [];
+  COPOS = d.copos || {}; ENCHIMENTO = d.enchimento || 0.9;
 }
 
 const CHECKS = ['levar_bancada'];
@@ -693,6 +711,13 @@ const brl = v => v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
 const num = id => parseFloat($(id).value) || 0;
 const chk = id => $(id).checked;
 const c = k => CUSTOS[k].valor;
+// --- copos: o escolhido em cada bebida
+const copo = k => COPOS[($('copo_'+k) || {value:''}).value] || {ml:200, custo:0, nome:'?'};
+// no gelado a tampa anda junto com o copo
+const custoCopo = k => { const x = copo(k); return x.custo + (x.tampa || 0); };
+// Copo maior = menos copos por leva de 1,6L. 200 ml a 90% dá 180 ml de
+// bebida e 8 copos por leva — exatamente o que estava fixo antes.
+const coposPorLeva = () => Math.max(1, Math.floor(RECEITA.rende_ml / (copo('coado').ml * ENCHIMENTO)));
 // escapa o que o usuário digita antes de ir para innerHTML (& antes de tudo,
 // senão re-escapa o que já foi escapado)
 const esc = v => String(v||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -715,16 +740,17 @@ function calcular(){
   q.xarope = Math.round(q.gelada * num('perc_xarope')/100);
 
   // --- café coado: o custo vem por leva de 1,6L, não por copo
-  const levas   = Math.ceil(q.coado / RECEITA.copos_por_leva);
+  const cpl     = coposPorLeva();
+  const levas   = Math.ceil(q.coado / cpl);
   const cafe_kg = c('cafe_kg');
   const custo_coado = levas * (RECEITA.cafe_g/1000 * cafe_kg + c('filtro_310'))
-                    + q.coado * c('copo_kraft_200');
+                    + q.coado * custoCopo('coado');
 
   const dose = RECEITA.espresso_g/1000 * cafe_kg;
   const leite = RECEITA.leite_ml/1000 * c('leite_l');
-  const custo_espresso = q.espresso * (dose + c('copo_kraft_200'));
-  const custo_esp_leite = q.espresso_leite * (dose + c('copo_kraft_200') + leite);
-  const custo_gelada = q.gelada * (dose + c('copo_pet_330') + c('tampa_pet_330') + c('canudo') + leite);
+  const custo_espresso = q.espresso * (dose + custoCopo('espresso'));
+  const custo_esp_leite = q.espresso_leite * (dose + custoCopo('espresso') + leite);
+  const custo_gelada = q.gelada * (dose + custoCopo('gelada') + c('canudo') + leite);
   const custo_xarope = q.xarope * (RECEITA.xarope_ml/1000 * c('xarope_l'));
   // o mini brownie é 1 brownie cortado em pedaços — não se compra 1/4 de
   // brownie, corta-se um inteiro (mesma lógica das levas do café coado)
@@ -794,7 +820,7 @@ function calcular(){
   const mg = (p, cu) => p > 0 ? (p - cu - p*i)/p : 0;
   const np = Math.max(1, Math.round(num('parcelas')));
 
-  return {conv,q,bebidas,levas,brownies_inteiros,pedacos,insumos,equipe,desloc,litros,montagem,outros,custo,
+  return {conv,q,bebidas,levas,cpl,brownies_inteiros,pedacos,insumos,equipe,desloc,litros,montagem,outros,custo,
           preco,soma,desconto,imposto,lucro,
           margem_real: preco>0 ? lucro/preco : 0,
           custo_coado,custo_espresso,custo_esp_leite,custo_gelada,custo_xarope,
@@ -860,6 +886,17 @@ function render(){
     : num('intervalo_h') > 0
       ? 'Serviço de <b style="color:var(--br)">' + hnum(num('duracao_h')) + 'h</b> + <b style="color:var(--br)">' + hnum(num('intervalo_h')) + 'h</b> de intervalo: começa ' + hr.inicio + ' e termina ' + hr.fim + (hr.vira ? ' <b>do dia seguinte</b>' : '') + '. O intervalo não conta como hora de serviço.'
       : '<b style="color:var(--br)">' + hnum(num('duracao_h')) + 'h</b> de serviço: ' + hr.inicio + ' às ' + hr.fim + (hr.vira ? ' <b>do dia seguinte</b>' : '') + '. Montagem a partir das ' + hr.montagem + (hr.antevespera ? ' <b>do dia anterior</b>' : '') + '.';
+
+  // o que cada copo custa e quanto o do coado muda o rendimento
+  [['coado','coado'],['espresso','espresso'],['gelada','gelada']].forEach(([k]) => {
+    const el = $('cc_' + k); if (!el) return;
+    const x = copo(k);
+    el.textContent = brl(custoCopo(k)) + (x.tampa ? ' c/ tampa' : '');
+  });
+  const mlCoado = copo('coado').ml, porcao = Math.round(mlCoado * ENCHIMENTO);
+  $('calc_copo').innerHTML = 'Café passado: copo de <b style="color:var(--br)">' + hnum(mlCoado) +
+      ' ml</b> servido com ' + hnum(porcao) + ' ml · 1,6 L rende <b style="color:var(--br)">' +
+      r.cpl + ' copos</b> por leva' + (r.levas > 0 ? ' · ' + r.levas + ' levas neste evento' : '');
 
   const hl = horasLocal();
   $('c_horas_local').innerHTML = hnum(hl) + 'h <small>' + hnum(num('montagem_antes_h')) + 'h montagem + ' +
@@ -1090,7 +1127,7 @@ function gerarPDF(){
     if (r.q.coado) bebidas.push('<b>Fornecimento de café passado:</b> Café do produtor Adauto Guimarães (Notas de Chocolate, nozes, leve acidez) ' +
       (md('coado')==='vontade'
         ? 'servido <b>à vontade</b> para o público.'
-        : 'servido em <b>' + r.q.coado + ' copos</b> de ' + hnum(RECEITA.copo_ml) + ' ml.') +
+        : 'servido em <b>' + r.q.coado + ' copos</b> de ' + hnum(Math.round(copo('coado').ml * ENCHIMENTO)) + ' ml.') +
       ' Feito na torre de passar café e servido com nossos copos duplos descartáveis podendo ser personalizados com o logo do evento.');
     if (r.q.espresso || r.q.espresso_leite){
       const quais = [];
@@ -1345,11 +1382,29 @@ function limpar(){
   CHECKS.forEach(k => $(k).checked = !!PADRAO[k]);
   CAMPOS_TXT.forEach(k => $(k).value = '');
   EQUIPE = JSON.parse(JSON.stringify(EQUIPE_PADRAO));
-  pintarEquipe();
+  pintarEquipe(); pintarCopos();
+  CAMPOS.forEach(k => { if (k.startsWith('copo_')) $(k).value = PADRAO[k]; });
   render();
 }
+// As opções de copo vêm do catálogo cifrado, então só dá para montar os
+// selects depois de abrir o cofre.
+function pintarCopos(){
+  const ordena = (a,b) => COPOS[a].ml - COPOS[b].ml;
+  const ids = Object.keys(COPOS);
+  const quentes = ids.filter(k => COPOS[k].tipo === 'quente').sort(ordena);
+  const gelados = ids.filter(k => COPOS[k].tipo === 'gelado').sort(ordena);
+  [['coado',quentes],['espresso',quentes],['gelada',gelados]].forEach(([alvo,lista]) => {
+    const el = $('copo_' + alvo);
+    if (!el) return;
+    const antes = el.value;
+    el.innerHTML = lista.map(k => '<option value="' + k + '">' + esc(COPOS[k].nome) + '</option>').join('');
+    if (lista.includes(antes)) el.value = antes;
+  });
+}
+
 function iniciar(){
   CAMPOS = Object.keys(PADRAO).filter(k => !CHECKS.includes(k));
+  pintarCopos();   // antes de aplicar PADRAO, senão o .value não encontra a opção
   EQUIPE = JSON.parse(JSON.stringify(EQUIPE_PADRAO));
   CAMPOS.forEach(k => $(k).value = PADRAO[k]);
   CHECKS.forEach(k => $(k).checked = !!PADRAO[k]);
@@ -1378,7 +1433,7 @@ function iniciar(){
 
   document.querySelectorAll('.wrap input').forEach(el => el.addEventListener('input', render));
   // os seletores de modo mudam o texto da proposta e o rotulo da quantidade
-  document.querySelectorAll('select.modo').forEach(el => el.addEventListener('change', render));
+  document.querySelectorAll('select.modo, select.copo').forEach(el => el.addEventListener('change', render));
   pintarHistorico();
   render();
 }
